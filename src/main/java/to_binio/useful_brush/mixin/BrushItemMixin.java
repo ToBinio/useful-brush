@@ -51,33 +51,33 @@ public class BrushItemMixin {
         }
 
 
-        BlockState blockStateToConvert = UsefulBrush.CLEAN_ABLE_BLOCK_STATES.get(block);
-
-        if (blockStateToConvert != null) {
-
-            world.setBlockState(blockPos, blockStateToConvert);
-
-            EquipmentSlot equipmentSlot = stack.equals(playerEntity.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
-            stack.damage(1, user, (userx) -> {
-                userx.sendEquipmentBreakStatus(equipmentSlot);
-            });
-        }
+//        BlockState blockStateToConvert = UsefulBrush.CLEAN_ABLE_BLOCK_STATES.get(block);
+//
+//        if (blockStateToConvert != null) {
+//
+//            world.setBlockState(blockPos, blockStateToConvert);
+//
+//            EquipmentSlot equipmentSlot = stack.equals(playerEntity.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
+//            stack.damage(1, user, (userx) -> {
+//                userx.sendEquipmentBreakStatus(equipmentSlot);
+//            });
+//        }
     }
-
-    @Redirect (method = "getHitResult", at = @At (value = "INVOKE", target = "Lnet/minecraft/entity/projectile/ProjectileUtil;getCollision(Lnet/minecraft/entity/Entity;Ljava/util/function/Predicate;D)Lnet/minecraft/util/hit/HitResult;"))
-    public HitResult getHitResult(Entity entity, Predicate<Entity> predicate, double range) {
-        return hit(entity, range);
-    }
-
-    @Unique
-    private static HitResult hit(Entity user, double range) {
-
-        Vec3d velocity = user.getRotationVec(0.0F).multiply(range);
-        World world = user.getWorld();
-        Vec3d pos = user.getEyePos();
-
-        Vec3d vec3d = pos.add(velocity);
-
-        return world.raycast(new RaycastContext(pos, vec3d, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, user));
-    }
+//
+//    @Redirect (method = "getHitResult", at = @At (value = "INVOKE", target = "Lnet/minecraft/entity/projectile/ProjectileUtil;getCollision(Lnet/minecraft/entity/Entity;Ljava/util/function/Predicate;D)Lnet/minecraft/util/hit/HitResult;"))
+//    public HitResult getHitResult(Entity entity, Predicate<Entity> predicate, double range) {
+//        return hit(entity, range);
+//    }
+//
+//    @Unique
+//    private static HitResult hit(Entity user, double range) {
+//
+//        Vec3d velocity = user.getRotationVec(0.0F).multiply(range);
+//        World world = user.getWorld();
+//        Vec3d pos = user.getEyePos();
+//
+//        Vec3d vec3d = pos.add(velocity);
+//
+//        return world.raycast(new RaycastContext(pos, vec3d, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, user));
+//    }
 }
