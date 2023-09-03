@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "useful_brush",
+  "version": "${version}",
+  "name": "Useful Brush",
+  "description": "",
+  "authors": [],
+  "contact": {
+    "repo": "https://github.com/tobia/useful-brush"
+  },
+  "license": "LGPL-3.0",
+  "icon": "assets/useful_brush/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "to_binio.useful_brush.client.UsefulBrushClient"
+    ],
+    "main": [
+      "to_binio.useful_brush.UsefulBrush"
+    ]
+  },
+  "mixins": [
+    "useful_brush.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
