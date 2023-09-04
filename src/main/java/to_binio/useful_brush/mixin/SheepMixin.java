@@ -6,10 +6,10 @@ import net.minecraft.item.Items;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import org.spongepowered.asm.mixin.Mixin;
-import to_binio.useful_brush.BrushAble;
+import to_binio.useful_brush.BrushAbleEntity;
 
 @Mixin (SheepEntity.class)
-public class SheepMixin implements BrushAble {
+public class SheepMixin implements BrushAbleEntity {
 
     @Override
     public boolean brush(PlayerEntity playerEntity) {

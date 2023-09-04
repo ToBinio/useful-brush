@@ -24,13 +24,14 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import to_binio.useful_brush.BrushAble;
+import to_binio.useful_brush.BrushAbleBlock;
+import to_binio.useful_brush.BrushAbleEntity;
 import to_binio.useful_brush.UsefulBrush;
 
 @Mixin (BrushItem.class)
 public class BrushItemMixin {
 
-    @Inject (at = @At (value = "INVOKE", target = "Lnet/minecraft/world/World;getBlockEntity(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/entity/BlockEntity;"), method = "usageTick")
+    @Inject (at = @At (value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/World;getBlockEntity(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/entity/BlockEntity;"), method = "usageTick")
     private void usageTickBlock(World world, LivingEntity user, ItemStack stack, int remainingUseTicks, CallbackInfo ci,
             @Local PlayerEntity playerEntity, @Local HitResult hitResult, @Local BlockHitResult blockHitResult,
             @Local BlockPos blockPos) {
@@ -46,6 +47,10 @@ public class BrushItemMixin {
             stack.damage(1, user, (userx) -> {
                 userx.sendEquipmentBreakStatus(equipmentSlot);
             });
+        }
+
+        if (block.getBlock() instanceof BrushAbleBlock brushAbleBlock) {
+            brushAbleBlock.brush(playerEntity, blockPos);
         }
     }
 
@@ -71,7 +76,7 @@ public class BrushItemMixin {
                     boolean brushSuccess = false;
 
                     if (!world.isClient()) {
-                        if (entity instanceof BrushAble brushAble) {
+                        if (entity instanceof BrushAbleEntity brushAble) {
                             brushSuccess = brushAble.brush(playerEntity);
                             if (brushSuccess) {
                                 EquipmentSlot equipmentSlot = stack.equals(playerEntity.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
