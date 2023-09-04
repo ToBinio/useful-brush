@@ -8,6 +8,8 @@
     "BrushItemInvoker",
     "SheepMixin",
     "ChickenMixin",
+    "WolfBrushAbleMixin",
+    "WolfMixin",
     "ItemMixin"
   ],
   "client": [

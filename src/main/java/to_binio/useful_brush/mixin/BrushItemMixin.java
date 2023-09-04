@@ -82,7 +82,7 @@ public class BrushItemMixin {
                     world.playSound(playerEntity, entity.getBlockPos(), soundEvent, SoundCategory.BLOCKS);
                     if (!world.isClient()) {
                         if (entity instanceof BrushAble brushAble) {
-                            boolean bl2 = brushAble.brush();
+                            boolean bl2 = brushAble.brush(playerEntity);
                             if (bl2) {
                                 EquipmentSlot equipmentSlot = stack.equals(playerEntity.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
                                 stack.damage(1, user, ((userx) -> {
