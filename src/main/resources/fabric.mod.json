@@ -26,5 +26,10 @@
     "fabricloader": ">=${loader_version}",
     "fabric": "*",
     "minecraft": "${minecraft_version}"
+  },
+  "custom": {
+    "loom:injected_interfaces": {
+      "net/minecraft/entity/passive/SheepEntity": ["to_binio/useful_brush/BrushAble"]
+    }
   }
 }
