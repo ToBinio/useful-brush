@@ -8,7 +8,8 @@ import java.util.HashMap;
 
 public class UsefulBrush implements ModInitializer {
 
-    public static final int SHEEP_MAX_BRUSH_COUNT = 12;
+    public static final int SHEEP_MAX_BRUSH_COUNT = 3;
+    public static final int CHICKEN_MAX_BRUSH_COUNT = 2;
 
     public static final HashMap<Block, Block> CLEAN_ABLE_BLOCKS = new HashMap<>();
 //    public static final HashMap<BlockState, BlockState> CLEAN_ABLE_BLOCK_STATES = new HashMap<>();

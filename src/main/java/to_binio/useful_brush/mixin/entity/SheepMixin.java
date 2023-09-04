@@ -1,7 +1,8 @@
-package to_binio.useful_brush.mixin.entiy;
+package to_binio.useful_brush.mixin.entity;
 
 import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.math.random.Random;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,14 +15,21 @@ import to_binio.useful_brush.UsefulBrush;
 public class SheepMixin {
 
     @Unique
-    private static final String BrushCountKey = "UsefulBrush.BrushCount";
+    private static final String BRUSH_COUNT_KEY = "UsefulBrush.BrushCount";
+    @Unique
+    private static final String BRUSH_COUNT_TIME_KEY = "UsefulBrush.BrushCountTime";
+
+    @Unique
+    private int brushCountTime = 0;
+
 
     @Inject (method = "writeCustomDataToNbt", at = @At (value = "TAIL"))
     public void writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
 
         BrushCount brushCount = (BrushCount) this;
 
-        nbt.putInt(BrushCountKey, brushCount.getBrushCount());
+        nbt.putInt(BRUSH_COUNT_KEY, brushCount.getBrushCount());
+        nbt.putInt(BRUSH_COUNT_TIME_KEY, brushCountTime);
     }
 
     @Inject (method = "readCustomDataFromNbt", at = @At (value = "TAIL"))
@@ -29,18 +37,21 @@ public class SheepMixin {
 
         BrushCount brushCount = (BrushCount) this;
 
-        brushCount.setBrushCount(nbt.getInt(BrushCountKey));
+        brushCount.setBrushCount(nbt.getInt(BRUSH_COUNT_KEY));
+        this.brushCountTime = nbt.getInt(BRUSH_COUNT_TIME_KEY);
     }
 
-    @Inject (method = "setSheared", at = @At (value = "TAIL"))
-    public void setSheared(boolean sheared, CallbackInfo ci) {
+    @Inject (method = "tickMovement", at = @At (value = "TAIL"))
+    public void tickMovement(CallbackInfo ci) {
 
         BrushCount brushCount = (BrushCount) this;
 
-        if (sheared) {
-            brushCount.setBrushCount((int) Math.max(brushCount.getBrushCount(), UsefulBrush.SHEEP_MAX_BRUSH_COUNT * 0.5));
-        } else {
-            brushCount.setBrushCount(0);
+        brushCountTime--;
+
+        if (brushCountTime <= 0) {
+            brushCount.setBrushCount(Math.max(brushCount.getBrushCount() - 1, 0));
+            brushCountTime = Random.create().nextBetween(300, 900);
         }
+
     }
 }

@@ -1,4 +1,4 @@
-package to_binio.useful_brush.mixin.entiy;
+package to_binio.useful_brush.mixin.entity;
 
 
 import net.minecraft.client.MinecraftClient;
