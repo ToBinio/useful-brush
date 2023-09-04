@@ -1,4 +1,4 @@
-package to_binio.useful_brush.mixin;
+package to_binio.useful_brush.mixin.entiy;
 
 import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;

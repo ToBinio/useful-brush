@@ -1,11 +1,9 @@
-package to_binio.useful_brush.mixin;
+package to_binio.useful_brush.mixin.entiy;
 
 import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.DyeColor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -40,7 +38,7 @@ public class SheepMixin {
         BrushCount brushCount = (BrushCount) this;
 
         if (sheared) {
-            brushCount.setBrushCount((int) Math.max(brushCount.getBrushCount(), UsefulBrush.SheepMaxBrushCount * 0.5));
+            brushCount.setBrushCount((int) Math.max(brushCount.getBrushCount(), UsefulBrush.SHEEP_MAX_BRUSH_COUNT * 0.5));
         } else {
             brushCount.setBrushCount(0);
         }

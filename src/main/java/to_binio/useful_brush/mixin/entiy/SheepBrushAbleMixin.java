@@ -1,4 +1,4 @@
-package to_binio.useful_brush.mixin;
+package to_binio.useful_brush.mixin.entiy;
 
 import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -7,7 +7,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.random.Random;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import to_binio.useful_brush.BrushAbleEntity;
 import to_binio.useful_brush.BrushCount;
 import to_binio.useful_brush.UsefulBrush;
@@ -20,11 +19,11 @@ public class SheepBrushAbleMixin implements BrushAbleEntity {
         SheepEntity sheep = (SheepEntity) (Object) this;
         BrushCount brushCount = sheep;
 
-        if (brushCount.getBrushCount() >= UsefulBrush.SheepMaxBrushCount) {
+        if (brushCount.getBrushCount() >= UsefulBrush.SHEEP_MAX_BRUSH_COUNT) {
             return false;
         }
 
-        if (Random.create().nextFloat() > (UsefulBrush.SheepMaxBrushCount - (float) brushCount.getBrushCount()) / UsefulBrush.SheepMaxBrushCount) {
+        if (Random.create().nextFloat() > (UsefulBrush.SHEEP_MAX_BRUSH_COUNT - (float) brushCount.getBrushCount()) / UsefulBrush.SHEEP_MAX_BRUSH_COUNT) {
             return false;
         }
 
@@ -33,7 +32,7 @@ public class SheepBrushAbleMixin implements BrushAbleEntity {
 
         brushCount.setBrushCount(brushCount.getBrushCount() + 1);
 
-        if (brushCount.getBrushCount() >= UsefulBrush.SheepMaxBrushCount * 0.5) {
+        if (brushCount.getBrushCount() >= UsefulBrush.SHEEP_MAX_BRUSH_COUNT * 0.5) {
             sheep.setSheared(true);
         }
 

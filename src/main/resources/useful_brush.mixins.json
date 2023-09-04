@@ -6,13 +6,13 @@
   "mixins": [
     "BrushItemMixin",
     "BrushItemInvoker",
-    "SheepBrushAbleMixin",
-    "SheepBrushCountMixin",
-    "SheepMixin",
-    "ChickenMixin",
-    "WolfBrushAbleMixin",
-    "WolfMixin",
-    "CampfireMixin",
+    "entiy.SheepBrushAbleMixin",
+    "entiy.SheepBrushCountMixin",
+    "entiy.SheepMixin",
+    "entiy.ChickenMixin",
+    "entiy.WolfBrushAbleMixin",
+    "entiy.WolfMixin",
+    "block.CampfireMixin",
     "ItemMixin"
   ],
   "client": [

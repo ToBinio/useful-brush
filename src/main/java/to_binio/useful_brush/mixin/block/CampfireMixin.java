@@ -1,4 +1,4 @@
-package to_binio.useful_brush.mixin;
+package to_binio.useful_brush.mixin.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
