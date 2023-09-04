@@ -9,5 +9,5 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin (BrushItem.class)
 public interface BrushItemInvoker {
     @Invoker ("getHitResult")
-    public HitResult invokeGetHitResult(LivingEntity user);
+    HitResult invokeGetHitResult(LivingEntity user);
 }

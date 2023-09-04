@@ -2,14 +2,9 @@ package to_binio.useful_brush;
 
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.SnowBlock;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import org.apache.commons.compress.compressors.lz77support.LZ77Compressor;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class UsefulBrush implements ModInitializer {
 

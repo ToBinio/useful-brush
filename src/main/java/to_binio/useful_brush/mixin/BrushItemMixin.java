@@ -9,31 +9,21 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BrushItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.particle.BlockStateParticleEffect;
-import net.minecraft.particle.ParticleTypes;
+import net.minecraft.particle.ParticleEffect;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import to_binio.useful_brush.BrushAble;
 import to_binio.useful_brush.UsefulBrush;
 
@@ -66,6 +56,7 @@ public class BrushItemMixin {
             @Local (ordinal = 0) PlayerEntity playerEntity, @Local (ordinal = 0) HitResult hitResult) {
 
         BrushItem item = (BrushItem) (Object) this;
+        Arm arm = user.getActiveHand() == Hand.MAIN_HAND ? playerEntity.getMainArm() : playerEntity.getMainArm().getOpposite();
 
         if (hitResult instanceof EntityHitResult entityHitResult) {
 
@@ -77,19 +68,22 @@ public class BrushItemMixin {
 
                     Entity entity = entityHitResult.getEntity();
 
-                    SoundEvent soundEvent = SoundEvents.ITEM_BRUSH_BRUSHING_GENERIC;
+                    boolean brushSuccess = false;
 
-                    world.playSound(playerEntity, entity.getBlockPos(), soundEvent, SoundCategory.BLOCKS);
                     if (!world.isClient()) {
                         if (entity instanceof BrushAble brushAble) {
-                            boolean bl2 = brushAble.brush(playerEntity);
-                            if (bl2) {
+                            brushSuccess = brushAble.brush(playerEntity);
+                            if (brushSuccess) {
                                 EquipmentSlot equipmentSlot = stack.equals(playerEntity.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
                                 stack.damage(1, user, ((userx) -> {
                                     userx.sendEquipmentBreakStatus(equipmentSlot);
                                 }));
                             }
                         }
+                    }
+
+                    if (!brushSuccess) {
+                        world.playSound(playerEntity, entity.getBlockPos(), SoundEvents.ITEM_BRUSH_BRUSHING_GENERIC, SoundCategory.BLOCKS);
                     }
                 }
 
@@ -98,6 +92,17 @@ public class BrushItemMixin {
         }
     }
 
+
+    public void addParticles(World world, Vec3d target, ParticleEffect particleEffect, Arm arm) {
+        double d = 3.0;
+        int i = arm == Arm.RIGHT ? 1 : -1;
+        int j = world.getRandom().nextBetweenExclusive(7, 12);
+
+        for (int k = 0; k < j; ++k) {
+            world.addParticle(particleEffect, target.x, target.y, target.z, 1 * (double) i * 3.0 * world.getRandom().nextDouble(), 0.0, 1 * (double) i * 3.0 * world.getRandom().nextDouble());
+        }
+
+    }
 
 //        BlockState blockStateToConvert = UsefulBrush.CLEAN_ABLE_BLOCK_STATES.get(block);
 //
