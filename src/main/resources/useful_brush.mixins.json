@@ -6,6 +6,8 @@
   "mixins": [
     "BrushItemMixin",
     "BrushItemInvoker",
+    "SheepBrushAbleMixin",
+    "SheepBrushCountMixin",
     "SheepMixin",
     "ChickenMixin",
     "WolfBrushAbleMixin",

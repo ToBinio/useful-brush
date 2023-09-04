@@ -1,27 +1,48 @@
 package to_binio.useful_brush.mixin;
 
 import net.minecraft.entity.passive.SheepEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Items;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.DyeColor;
 import org.spongepowered.asm.mixin.Mixin;
-import to_binio.useful_brush.BrushAbleEntity;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import to_binio.useful_brush.BrushCount;
+import to_binio.useful_brush.UsefulBrush;
 
 @Mixin (SheepEntity.class)
-public class SheepMixin implements BrushAbleEntity {
+public class SheepMixin {
 
-    @Override
-    public boolean brush(PlayerEntity playerEntity) {
-        SheepEntity sheep = (SheepEntity) (Object) this;
+    @Unique
+    private static final String BrushCountKey = "UsefulBrush.BrushCount";
 
-        if (sheep.isSheared()) {
-            return false;
+    @Inject (method = "writeCustomDataToNbt", at = @At (value = "TAIL"))
+    public void writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
+
+        BrushCount brushCount = (BrushCount) this;
+
+        nbt.putInt(BrushCountKey, brushCount.getBrushCount());
+    }
+
+    @Inject (method = "readCustomDataFromNbt", at = @At (value = "TAIL"))
+    public void readCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
+
+        BrushCount brushCount = (BrushCount) this;
+
+        brushCount.setBrushCount(nbt.getInt(BrushCountKey));
+    }
+
+    @Inject (method = "setSheared", at = @At (value = "TAIL"))
+    public void setSheared(boolean sheared, CallbackInfo ci) {
+
+        BrushCount brushCount = (BrushCount) this;
+
+        if (sheared) {
+            brushCount.setBrushCount((int) Math.max(brushCount.getBrushCount(), UsefulBrush.SheepMaxBrushCount * 0.5));
+        } else {
+            brushCount.setBrushCount(0);
         }
-
-        sheep.dropItem(Items.STRING.asItem(), 1);
-        sheep.getWorld().playSound(playerEntity, sheep.getBlockPos(), SoundEvents.ITEM_BRUSH_BRUSHING_GENERIC, SoundCategory.BLOCKS);
-
-        return true;
     }
 }
