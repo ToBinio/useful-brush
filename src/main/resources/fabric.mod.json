@@ -30,18 +30,18 @@
   "custom": {
     "loom:injected_interfaces": {
       "net/minecraft/entity/passive/SheepEntity": [
-        "to_binio/useful_brush/BrushAbleEntity",
+        "to_binio/useful_brush/BrushableEntity",
         "to_binio/useful_brush/BrushCount"
       ],
       "net/minecraft/entity/passive/WolfEntity": [
-        "to_binio/useful_brush/BrushAbleEntity"
+        "to_binio/useful_brush/BrushableEntity"
       ],
       "net/minecraft/entity/passive/ChickenEntity": [
-        "to_binio/useful_brush/BrushAbleEntity",
+        "to_binio/useful_brush/BrushableEntity",
         "to_binio/useful_brush/BrushCount"
       ],
       "net/minecraft/entity/passive/CampfireBlock": [
-        "to_binio/useful_brush/BrushAbleBlock"
+        "to_binio/useful_brush/BrushableBlock"
       ]
     }
   }

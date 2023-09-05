@@ -16,7 +16,7 @@ public class ChickenBrushableMixin implements BrushableEntity {
     @Override
     public boolean brush(PlayerEntity playerEntity) {
         ChickenEntity chicken = (ChickenEntity) (Object) this;
-        BrushCount brushCount = chicken;
+        BrushCount brushCount = (BrushCount) chicken;
 
         if (brushCount.getBrushCount() >= UsefulBrush.CHICKEN_MAX_BRUSH_COUNT || Random.create().nextBetween(0, 5) == 0) {
             return false;

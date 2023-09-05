@@ -1,19 +1,25 @@
 package to_binio.useful_brush.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BrushItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootTable;
+import net.minecraft.loot.context.LootContextParameterSet;
+import net.minecraft.loot.context.LootContextParameters;
+import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.particle.ParticleEffect;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -37,16 +43,43 @@ public class BrushItemMixin {
             @Local BlockPos blockPos) {
         BlockState block = world.getBlockState(blockPos);
 
-        Block blockToConvert = UsefulBrush.BRUSHABLE_BLOCKS.get(block.getBlock());
+        var blockEntry = UsefulBrush.BRUSHABLE_BLOCKS.get(block.getBlock());
 
-        if (blockToConvert != null) {
+        if (blockEntry != null) {
 
-            world.setBlockState(blockPos, blockToConvert.getStateWithProperties(block));
+            world.setBlockState(blockPos, blockEntry.block().getStateWithProperties(block));
 
             EquipmentSlot equipmentSlot = stack.equals(playerEntity.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
             stack.damage(1, user, (userx) -> {
                 userx.sendEquipmentBreakStatus(equipmentSlot);
             });
+
+            if (blockEntry.lootTable() != null) {
+                var lootTable = world.getServer().getLootManager().getLootTable(blockEntry.lootTable());
+
+                if (lootTable != LootTable.EMPTY) {
+                    LootContextParameterSet.Builder builder = (new LootContextParameterSet.Builder((ServerWorld) world)).add(LootContextParameters.ORIGIN, blockPos.toCenterPos()).add(LootContextParameters.TOOL, ItemStack.EMPTY).add(LootContextParameters.BLOCK_STATE, block);
+
+                    LootContextParameterSet lootContextParameterSet = builder.build(LootContextTypes.BLOCK);
+                    lootTable.generateLoot(lootContextParameterSet, 0L, itemStack -> {
+
+                        UsefulBrush.LOGGER.info(itemStack.getItem().getName().toString());
+
+                        Vec3d pos = hitResult.getPos();
+                        Vec3d center = blockPos.toCenterPos();
+
+                        Vec3d offset = pos.subtract(center);
+
+                        Vec3d spawnPos = pos.add(offset.normalize().multiply(0.2));
+
+                        ItemEntity itemEntity = new ItemEntity(world, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), itemStack);
+                        itemEntity.setToDefaultPickupDelay();
+                        world.spawnEntity(itemEntity);
+                    });
+                } else {
+                    UsefulBrush.LOGGER.error("Could not find loot_table '%s'".formatted(blockEntry.lootTable()));
+                }
+            }
         }
 
         if (block.getBlock() instanceof BrushableBlock brushAbleBlock) {

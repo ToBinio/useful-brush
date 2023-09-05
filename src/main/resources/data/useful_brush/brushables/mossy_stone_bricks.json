@@ -1,7 +1,22 @@
 {
-  "mossy_stone_bricks": "stone_bricks",
-  "mossy_stone_brick_stairs": "stone_brick_stairs",
-  "mossy_stone_brick_slab": "stone_brick_slab",
-  "mossy_stone_brick_wall": "stone_brick_wall",
-  "infested_mossy_stone_bricks": "stone_bricks"
+  "mossy_stone_bricks": {
+    "block": "stone_bricks",
+    "loot_table": "useful_brush:mossy"
+  },
+  "mossy_stone_brick_stairs": {
+    "block": "stone_brick_stairs",
+    "loot_table": "useful_brush:mossy"
+  },
+  "mossy_stone_brick_slab": {
+    "block": "stone_brick_slab",
+    "loot_table": "useful_brush:mossy"
+  },
+  "mossy_stone_brick_wall": {
+    "block": "stone_brick_wall",
+    "loot_table": "useful_brush:mossy"
+  },
+  "infested_mossy_stone_bricks": {
+    "block": "infested_stone_bricks",
+    "loot_table": "useful_brush:mossy"
+  }
 }

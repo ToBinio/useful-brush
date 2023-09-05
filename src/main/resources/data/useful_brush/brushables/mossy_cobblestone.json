@@ -1,6 +1,18 @@
 {
-  "mossy_cobblestone": "cobblestone",
-  "mossy_cobblestone_stairs": "cobblestone_stairs",
-  "mossy_cobblestone_slab": "cobblestone_slab",
-  "mossy_cobblestone_wall": "cobblestone_wall"
+  "mossy_cobblestone": {
+    "block": "cobblestone",
+    "loot_table": "useful_brush:mossy"
+  },
+  "mossy_cobblestone_stairs": {
+    "block": "cobblestone_stairs",
+    "loot_table": "useful_brush:mossy"
+  },
+  "mossy_cobblestone_slab": {
+    "block": "cobblestone_slab",
+    "loot_table": "useful_brush:mossy"
+  },
+  "mossy_cobblestone_wall": {
+    "block": "cobblestone_wall",
+    "loot_table": "useful_brush:mossy"
+  }
 }

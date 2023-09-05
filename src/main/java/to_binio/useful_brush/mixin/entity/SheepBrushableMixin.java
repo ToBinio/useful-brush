@@ -17,7 +17,7 @@ public class SheepBrushableMixin implements BrushableEntity {
     @Override
     public boolean brush(PlayerEntity playerEntity) {
         SheepEntity sheep = (SheepEntity) (Object) this;
-        BrushCount brushCount = sheep;
+        BrushCount brushCount = (BrushCount) sheep;
 
         if (brushCount.getBrushCount() >= UsefulBrush.SHEEP_MAX_BRUSH_COUNT) {
             return false;
