@@ -7,10 +7,10 @@ import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
 import org.spongepowered.asm.mixin.Mixin;
-import to_binio.useful_brush.BrushAbleEntity;
+import to_binio.useful_brush.BrushableEntity;
 
 @Mixin (WolfEntity.class)
-public class WolfBrushAbleMixin implements BrushAbleEntity {
+public class WolfBrushableMixin implements BrushableEntity {
     @Override
     public boolean brush(PlayerEntity playerEntity) {
         WolfEntity wolf = (WolfEntity) (Object) this;

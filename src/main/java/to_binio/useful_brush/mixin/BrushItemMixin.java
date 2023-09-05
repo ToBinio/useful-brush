@@ -24,8 +24,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import to_binio.useful_brush.BrushAbleBlock;
-import to_binio.useful_brush.BrushAbleEntity;
+import to_binio.useful_brush.BrushableBlock;
+import to_binio.useful_brush.BrushableEntity;
 import to_binio.useful_brush.UsefulBrush;
 
 @Mixin (BrushItem.class)
@@ -37,7 +37,7 @@ public class BrushItemMixin {
             @Local BlockPos blockPos) {
         BlockState block = world.getBlockState(blockPos);
 
-        Block blockToConvert = UsefulBrush.CLEAN_ABLE_BLOCKS.get(block.getBlock());
+        Block blockToConvert = UsefulBrush.BRUSHABLE_BLOCKS.get(block.getBlock());
 
         if (blockToConvert != null) {
 
@@ -49,7 +49,7 @@ public class BrushItemMixin {
             });
         }
 
-        if (block.getBlock() instanceof BrushAbleBlock brushAbleBlock) {
+        if (block.getBlock() instanceof BrushableBlock brushAbleBlock) {
             brushAbleBlock.brush(playerEntity, blockPos);
         }
     }
@@ -76,7 +76,7 @@ public class BrushItemMixin {
                     boolean brushSuccess = false;
 
                     if (!world.isClient()) {
-                        if (entity instanceof BrushAbleEntity brushAble) {
+                        if (entity instanceof BrushableEntity brushAble) {
                             brushSuccess = brushAble.brush(playerEntity);
                             if (brushSuccess) {
                                 EquipmentSlot equipmentSlot = stack.equals(playerEntity.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;

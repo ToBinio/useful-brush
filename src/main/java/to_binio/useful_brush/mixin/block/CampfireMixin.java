@@ -8,10 +8,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
 import org.spongepowered.asm.mixin.Mixin;
-import to_binio.useful_brush.BrushAbleBlock;
+import to_binio.useful_brush.BrushableBlock;
 
 @Mixin (CampfireBlock.class)
-public class CampfireMixin implements BrushAbleBlock {
+public class CampfireMixin implements BrushableBlock {
     @Override
     public boolean brush(PlayerEntity playerEntity, BlockPos blockPos) {
 
