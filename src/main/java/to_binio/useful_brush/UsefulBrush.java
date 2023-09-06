@@ -34,7 +34,9 @@ import java.util.Map;
 
 public class UsefulBrush implements ModInitializer {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger("useful_brush");
+
+    public static final String MOD_ID = "useful_brush";
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     public static final int SHEEP_MAX_BRUSH_COUNT = 3;
     public static final int CHICKEN_MAX_BRUSH_COUNT = 2;
@@ -48,79 +50,7 @@ public class UsefulBrush implements ModInitializer {
     @Override
     public void onInitialize() {
 
-        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
-
-            @Override
-            public Identifier getFabricId() {
-                return new Identifier("useful_brush", "brushable_blocks");
-            }
-
-            @Override
-            public void reload(ResourceManager manager) {
-                BRUSHABLE_BLOCKS.clear();
-
-                Map<Identifier, List<Resource>> brushable = manager.findAllResources("brushables", identifier -> identifier.getPath().endsWith(".json"));
-
-                var count = 0;
-
-                for (List<Resource> resources : brushable.values()) {
-                    for (Resource resource : resources) {
-
-                        try (var input = resource.getInputStream()) {
-                            String string = new String(input.readAllBytes());
-                            JsonObject data = JsonHelper.deserialize(string);
-
-                            for (Map.Entry<String, JsonElement> entry : data.asMap().entrySet()) {
-                                var from = entry.getKey();
-                                String to;
-                                Identifier loot_table = null;
-
-                                if (entry.getValue().isJsonObject()) {
-
-                                    JsonObject value = entry.getValue().getAsJsonObject();
-
-                                    to = value.get("block").getAsString();
-
-                                    if (value.has("loot_table")) {
-                                        String lootTableString = value.get("loot_table").getAsString();
-                                        loot_table = Identifier.tryParse(lootTableString);
-
-                                        if (loot_table == null) {
-                                            LOGGER.error("Could not find loot_table '%s'".formatted(lootTableString));
-                                        }
-                                    }
-
-                                } else {
-                                    to = entry.getValue().getAsString();
-                                }
-
-                                var itemFrom = Registries.BLOCK.getOrEmpty(Identifier.tryParse(from));
-                                var itemTo = Registries.BLOCK.getOrEmpty(Identifier.tryParse(to));
-
-                                if (itemFrom.isEmpty()) {
-                                    LOGGER.error("Unknown block '%s'".formatted(to));
-                                    continue;
-                                }
-
-
-                                if (itemTo.isEmpty()) {
-                                    LOGGER.error("Unknown block '%s'".formatted(to));
-                                    continue;
-                                }
-
-                                BRUSHABLE_BLOCKS.put(itemFrom.get(), new BrushableBlockEntry(itemTo.get(), loot_table));
-                                count++;
-                            }
-
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                }
-
-                LOGGER.info("Loaded " + count + " brushable blocks");
-            }
-        });
+        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new BrushableBlocksResourceLoader());
 
 //        CLEAN_ABLE_BLOCK_STATES.put(Blocks.SNOW.getDefaultState(), Blocks.SNOW.getDefaultState().with(SnowBlock.LAYERS, 7));
 //        CLEAN_ABLE_BLOCK_STATES.put(Blocks.SNOW.getDefaultState().with(SnowBlock.LAYERS, 8), Blocks.SNOW.getDefaultState().with(SnowBlock.LAYERS, 7));
