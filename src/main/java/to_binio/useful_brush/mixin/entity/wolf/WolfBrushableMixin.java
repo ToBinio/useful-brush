@@ -1,4 +1,4 @@
-package to_binio.useful_brush.mixin.entity;
+package to_binio.useful_brush.mixin.entity.wolf;
 
 
 import net.minecraft.client.MinecraftClient;

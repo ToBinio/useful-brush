@@ -1,4 +1,4 @@
-package to_binio.useful_brush.mixin.entity;
+package to_binio.useful_brush.mixin.entity.sheep;
 
 import net.minecraft.entity.passive.SheepEntity;
 import org.spongepowered.asm.mixin.Mixin;
