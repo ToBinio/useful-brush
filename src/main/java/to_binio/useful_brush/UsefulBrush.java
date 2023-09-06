@@ -94,10 +94,21 @@ public class UsefulBrush implements ModInitializer {
                                     to = entry.getValue().getAsString();
                                 }
 
-                                var itemFrom = Registries.BLOCK.getOrEmpty(Identifier.tryParse(from)).orElseThrow(() -> new JsonSyntaxException("Unknown block '" + from + "'"));
-                                var itemTo = Registries.BLOCK.getOrEmpty(Identifier.tryParse(to)).orElseThrow(() -> new JsonSyntaxException("Unknown block '" + to + "'"));
+                                var itemFrom = Registries.BLOCK.getOrEmpty(Identifier.tryParse(from));
+                                var itemTo = Registries.BLOCK.getOrEmpty(Identifier.tryParse(to));
 
-                                BRUSHABLE_BLOCKS.put(itemFrom, new BrushableBlockEntry(itemTo, loot_table));
+                                if (itemFrom.isEmpty()) {
+                                    LOGGER.error("Unknown block '%s'".formatted(to));
+                                    continue;
+                                }
+
+
+                                if (itemTo.isEmpty()) {
+                                    LOGGER.error("Unknown block '%s'".formatted(to));
+                                    continue;
+                                }
+
+                                BRUSHABLE_BLOCKS.put(itemFrom.get(), new BrushableBlockEntry(itemTo.get(), loot_table));
                                 count++;
                             }
 
