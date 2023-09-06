@@ -19,11 +19,7 @@ public class SheepBrushableMixin implements BrushableEntity {
         SheepEntity sheep = (SheepEntity) (Object) this;
         BrushCount brushCount = (BrushCount) sheep;
 
-        if (brushCount.getBrushCount() >= UsefulBrush.SHEEP_MAX_BRUSH_COUNT) {
-            return false;
-        }
-
-        if (brushCount.getBrushCount() >= UsefulBrush.SHEEP_MAX_BRUSH_COUNT || Random.create().nextBetween(0, 5) == 0) {
+        if (brushCount.getBrushCount() >= UsefulBrush.SHEEP_MAX_BRUSH_COUNT || Random.create().nextBetween(0, 3) != 0) {
             return false;
         }
 
