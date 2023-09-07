@@ -39,7 +39,7 @@ public class SheepBrushableMixin implements BrushableEntity {
             world.addParticle(blockStateParticleEffect, brushLocation.x, brushLocation.y + 0.8, brushLocation.z, 3.0 * world.getRandom().nextDouble() - 1.5, 2.0 * world.getRandom().nextDouble(), 3.0 * world.getRandom().nextDouble() - 1.5);
         }
 
-        if (brushCount.getBrushCount() >= UsefulBrush.SHEEP_MAX_BRUSH_COUNT || random.nextBetween(0, 3) != 0) {
+        if (brushCount.getBrushCount() >= UsefulBrush.SHEEP_MAX_BRUSH_COUNT || random.nextBetween(0, 5) != 0) {
             return false;
         }
 

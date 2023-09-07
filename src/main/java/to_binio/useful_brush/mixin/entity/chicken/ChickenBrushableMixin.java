@@ -39,7 +39,7 @@ public class ChickenBrushableMixin implements BrushableEntity {
             world.addParticle(blockStateParticleEffect, brushLocation.x, brushLocation.y + chickenHeight, brushLocation.z, world.getRandom().nextDouble() - 0.5, world.getRandom().nextDouble(), world.getRandom().nextDouble() - .5);
         }
 
-        if (brushCount.getBrushCount() >= UsefulBrush.CHICKEN_MAX_BRUSH_COUNT * (chicken.isBaby() ? 0.5 : 1) || Random.create().nextBetween(0, 3) != 0) {
+        if (brushCount.getBrushCount() >= UsefulBrush.CHICKEN_MAX_BRUSH_COUNT * (chicken.isBaby() ? 0.5 : 1) || Random.create().nextBetween(0, 5) != 0) {
             return false;
         }
 
