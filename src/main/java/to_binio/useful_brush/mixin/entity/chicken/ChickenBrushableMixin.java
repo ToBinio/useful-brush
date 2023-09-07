@@ -27,7 +27,7 @@ public class ChickenBrushableMixin implements BrushableEntity {
     public boolean brush(PlayerEntity playerEntity, Vec3d brushLocation) {
         ChickenEntity chicken = (ChickenEntity) (Object) this;
         BrushCount brushCount = (BrushCount) chicken;
-        Random random = Random.create();
+        Random random = chicken.getRandom();
         World world = MinecraftClient.getInstance().world;
 
         BlockStateParticleEffect blockStateParticleEffect = new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.CALCITE.getDefaultState());

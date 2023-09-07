@@ -5,7 +5,9 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleEffect;
@@ -37,17 +39,18 @@ public class SheepBrushableMixin implements BrushableEntity {
 
         BlockStateParticleEffect blockStateParticleEffect = new BlockStateParticleEffect(ParticleTypes.BLOCK, wool.getDefaultState());
 
-        int particleCount = random.nextBetweenExclusive(7, 12);
+        var sheepHeight = sheep.isBaby() ? 0.3 : 0.8;
+        int particleCount = (int) (random.nextBetweenExclusive(7, 12) * (sheep.isBaby() ? 0.3 : 1));
 
         for (int k = 0; k < particleCount; ++k) {
-            world.addParticle(blockStateParticleEffect, brushLocation.x, brushLocation.y + 0.8, brushLocation.z, 3.0 * world.getRandom().nextDouble() - 1.5, 2.0 * world.getRandom().nextDouble(), 3.0 * world.getRandom().nextDouble() - 1.5);
+            world.addParticle(blockStateParticleEffect, brushLocation.x, brushLocation.y + sheepHeight, brushLocation.z, 3.0 * world.getRandom().nextDouble() - 1.5, 2.0 * world.getRandom().nextDouble(), 3.0 * world.getRandom().nextDouble() - 1.5);
         }
 
-        if (brushCount.getBrushCount() >= UsefulBrush.SHEEP_MAX_BRUSH_COUNT || random.nextBetween(0, 5) != 0) {
+        if (brushCount.getBrushCount() >= UsefulBrush.SHEEP_MAX_BRUSH_COUNT * (sheep.isBaby() ? 0.5 : 1) || random.nextBetween(0, 5) != 0) {
             return false;
         }
 
-        sheep.dropItem(Items.STRING.asItem(), 1);
+        sheep.dropStack(new ItemStack(Items.STRING.asItem()), (float) sheepHeight);
         world.playSound(playerEntity, sheep.getBlockPos(), SoundEvents.ITEM_BRUSH_BRUSHING_GENERIC, SoundCategory.BLOCKS);
 
         brushCount.setBrushCount(brushCount.getBrushCount() + 1);
