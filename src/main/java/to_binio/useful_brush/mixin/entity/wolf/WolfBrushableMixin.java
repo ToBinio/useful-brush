@@ -6,13 +6,17 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.util.Arm;
+import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
 import to_binio.useful_brush.BrushableEntity;
 
 @Mixin (WolfEntity.class)
 public class WolfBrushableMixin implements BrushableEntity {
+
     @Override
-    public boolean brush(PlayerEntity playerEntity) {
+    public boolean brush(PlayerEntity playerEntity, Vec3d brushLocation) {
+
         WolfEntity wolf = (WolfEntity) (Object) this;
 
         if (!wolf.isOwner(playerEntity)) {

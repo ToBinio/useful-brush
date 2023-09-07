@@ -110,7 +110,7 @@ public class BrushItemMixin {
 
                     if (!world.isClient()) {
                         if (entity instanceof BrushableEntity brushAble) {
-                            brushSuccess = brushAble.brush(playerEntity);
+                            brushSuccess = brushAble.brush(playerEntity, hitResult.getPos());
                             if (brushSuccess) {
                                 EquipmentSlot equipmentSlot = stack.equals(playerEntity.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
                                 stack.damage(1, user, ((userx) -> {
@@ -128,18 +128,6 @@ public class BrushItemMixin {
                 ci.cancel();
             }
         }
-    }
-
-
-    public void addParticles(World world, Vec3d target, ParticleEffect particleEffect, Arm arm) {
-        double d = 3.0;
-        int i = arm == Arm.RIGHT ? 1 : -1;
-        int j = world.getRandom().nextBetweenExclusive(7, 12);
-
-        for (int k = 0; k < j; ++k) {
-            world.addParticle(particleEffect, target.x, target.y, target.z, 1 * (double) i * 3.0 * world.getRandom().nextDouble(), 0.0, 1 * (double) i * 3.0 * world.getRandom().nextDouble());
-        }
-
     }
 
 //        BlockState blockStateToConvert = UsefulBrush.CLEAN_ABLE_BLOCK_STATES.get(block);
