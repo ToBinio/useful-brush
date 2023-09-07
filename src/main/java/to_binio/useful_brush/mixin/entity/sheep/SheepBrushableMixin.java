@@ -30,7 +30,6 @@ public class SheepBrushableMixin implements BrushableEntity {
         BrushCount brushCount = (BrushCount) sheep;
         Random random = Random.create();
         World world = MinecraftClient.getInstance().world;
-        BlockPos sheepPos = sheep.getBlockPos();
 
         BlockStateParticleEffect blockStateParticleEffect = new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.WHITE_WOOL.getDefaultState());
 
@@ -45,7 +44,7 @@ public class SheepBrushableMixin implements BrushableEntity {
         }
 
         sheep.dropItem(Items.STRING.asItem(), 1);
-        world.playSound(playerEntity, sheepPos, SoundEvents.ITEM_BRUSH_BRUSHING_GENERIC, SoundCategory.BLOCKS);
+        world.playSound(playerEntity, sheep.getBlockPos(), SoundEvents.ITEM_BRUSH_BRUSHING_GENERIC, SoundCategory.BLOCKS);
 
         brushCount.setBrushCount(brushCount.getBrushCount() + 1);
 
