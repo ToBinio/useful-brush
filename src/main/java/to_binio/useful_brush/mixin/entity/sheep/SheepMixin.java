@@ -1,15 +1,20 @@
 package to_binio.useful_brush.mixin.entity.sheep;
 
 import net.minecraft.entity.passive.SheepEntity;
+import net.minecraft.item.ItemConvertible;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.random.Random;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import to_binio.useful_brush.BrushCount;
 import to_binio.useful_brush.UsefulBrush;
+
+import java.util.Map;
 
 @Mixin (SheepEntity.class)
 public class SheepMixin {

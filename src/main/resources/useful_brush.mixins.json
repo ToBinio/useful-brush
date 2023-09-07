@@ -9,6 +9,7 @@
     "entity.sheep.SheepBrushableMixin",
     "entity.sheep.SheepBrushCountMixin",
     "entity.sheep.SheepMixin",
+    "entity.sheep.SheepAccessor",
     "entity.chicken.ChickenBrushableMixin",
     "entity.chicken.ChickenBrushCountMixin",
     "entity.chicken.ChickenMixin",

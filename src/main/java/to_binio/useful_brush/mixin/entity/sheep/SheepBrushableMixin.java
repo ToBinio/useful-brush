@@ -1,9 +1,11 @@
 package to_binio.useful_brush.mixin.entity.sheep;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleEffect;
@@ -28,10 +30,12 @@ public class SheepBrushableMixin implements BrushableEntity {
     public boolean brush(PlayerEntity playerEntity, Vec3d brushLocation) {
         SheepEntity sheep = (SheepEntity) (Object) this;
         BrushCount brushCount = (BrushCount) sheep;
-        Random random = Random.create();
+        Random random = sheep.getRandom();
         World world = MinecraftClient.getInstance().world;
 
-        BlockStateParticleEffect blockStateParticleEffect = new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.WHITE_WOOL.getDefaultState());
+        var wool = (Block) SheepAccessor.getDrops().get(sheep.getColor());
+
+        BlockStateParticleEffect blockStateParticleEffect = new BlockStateParticleEffect(ParticleTypes.BLOCK, wool.getDefaultState());
 
         int particleCount = random.nextBetweenExclusive(7, 12);
 
