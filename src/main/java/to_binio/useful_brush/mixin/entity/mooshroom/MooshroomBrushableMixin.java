@@ -49,7 +49,12 @@ public class MooshroomBrushableMixin implements BrushableEntity {
             return false;
         }
 
-        mooshroom.dropStack(new ItemStack(Items.RED_MUSHROOM.asItem()), (float) mooshroomHeight);
+        if (random.nextBetween(0, 5) == 0) {
+            mooshroom.dropStack(new ItemStack(Items.BROWN_MUSHROOM.asItem()), (float) mooshroomHeight);
+        } else {
+            mooshroom.dropStack(new ItemStack(Items.RED_MUSHROOM.asItem()), (float) mooshroomHeight);
+        }
+
         world.playSound(playerEntity, mooshroom.getBlockPos(), SoundEvents.ITEM_BRUSH_BRUSHING_GENERIC, SoundCategory.BLOCKS);
 
         brushCount.setBrushCount(brushCount.getBrushCount() + 1);
