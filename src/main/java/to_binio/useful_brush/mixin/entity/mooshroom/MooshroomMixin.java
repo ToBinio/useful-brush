@@ -1,23 +1,42 @@
-package to_binio.useful_brush.mixin.entity.sheep;
+package to_binio.useful_brush.mixin.entity.mooshroom;
 
-import net.minecraft.entity.passive.SheepEntity;
-import net.minecraft.item.ItemConvertible;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.passive.CowEntity;
+import net.minecraft.entity.passive.MooshroomEntity;
+import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.DyeColor;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import to_binio.useful_brush.BrushCount;
 import to_binio.useful_brush.UsefulBrush;
 
-import java.util.Map;
+/**
+ * Created: 08/09/2023
+ * @author Tobias Frischmann
+ */
 
-@Mixin (SheepEntity.class)
-public class SheepMixin {
+@Mixin (MooshroomEntity.class)
+public class MooshroomMixin extends CowEntity {
+    @Nullable
+    @Override
+    public MooshroomEntity createChild(ServerWorld serverWorld, PassiveEntity passiveEntity) {
+        MooshroomEntity mooshroomEntity = (MooshroomEntity) EntityType.MOOSHROOM.create(serverWorld);
+        if (mooshroomEntity != null) {
+
+            MooshroomAccessor mooshroomAccessor = (MooshroomAccessor) mooshroomEntity;
+
+            mooshroomEntity.setVariant(mooshroomAccessor.invokerChooseBabyType((MooshroomEntity) passiveEntity));
+        }
+
+        return mooshroomEntity;
+    }
 
     @Unique
     private static final String BRUSH_COUNT_KEY = "UsefulBrush.BrushCount";
@@ -26,6 +45,10 @@ public class SheepMixin {
 
     @Unique
     private int brushCountTime = 0;
+
+    public MooshroomMixin(EntityType<? extends MooshroomEntity> entityType, World world) {
+        super(entityType, world);
+    }
 
 
     @Inject (method = "writeCustomDataToNbt", at = @At (value = "TAIL"))
@@ -46,8 +69,10 @@ public class SheepMixin {
         this.brushCountTime = nbt.getInt(BRUSH_COUNT_TIME_KEY);
     }
 
-    @Inject (method = "tickMovement", at = @At (value = "TAIL"))
-    public void tickMovement(CallbackInfo ci) {
+
+    @Override
+    public void tickMovement() {
+        super.tickMovement();
 
         BrushCount brushCount = (BrushCount) this;
 
@@ -55,7 +80,7 @@ public class SheepMixin {
 
         if (brushCountTime <= 0) {
             brushCount.setBrushCount(Math.max(brushCount.getBrushCount() - 1, 0));
-            brushCountTime = Random.create().nextBetween(300, 900);
+            brushCountTime = Random.create().nextBetween(1000, 2000);
         }
     }
 }

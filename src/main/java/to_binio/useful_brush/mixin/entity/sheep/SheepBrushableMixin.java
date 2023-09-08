@@ -33,7 +33,7 @@ public class SheepBrushableMixin implements BrushableEntity {
         SheepEntity sheep = (SheepEntity) (Object) this;
         BrushCount brushCount = (BrushCount) sheep;
         Random random = sheep.getRandom();
-        World world = MinecraftClient.getInstance().world;
+        World world = sheep.getWorld();
 
         var wool = (Block) SheepAccessor.getDrops().get(sheep.getColor());
 

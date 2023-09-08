@@ -40,6 +40,10 @@
         "to_binio/useful_brush/BrushableEntity",
         "to_binio/useful_brush/BrushCount"
       ],
+      "net/minecraft/entity/passive/MooshroomEntity": [
+        "to_binio/useful_brush/BrushableEntity",
+        "to_binio/useful_brush/BrushCount"
+      ],
       "net/minecraft/entity/passive/CampfireBlock": [
         "to_binio/useful_brush/BrushableBlock"
       ]

@@ -28,7 +28,7 @@ public class ChickenBrushableMixin implements BrushableEntity {
         ChickenEntity chicken = (ChickenEntity) (Object) this;
         BrushCount brushCount = (BrushCount) chicken;
         Random random = chicken.getRandom();
-        World world = MinecraftClient.getInstance().world;
+        World world = chicken.getWorld();
 
         BlockStateParticleEffect blockStateParticleEffect = new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.CALCITE.getDefaultState());
 

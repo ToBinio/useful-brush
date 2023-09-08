@@ -108,15 +108,13 @@ public class BrushItemMixin {
 
                     boolean brushSuccess = false;
 
-                    if (!world.isClient()) {
-                        if (entity instanceof BrushableEntity brushAble) {
-                            brushSuccess = brushAble.brush(playerEntity, hitResult.getPos());
-                            if (brushSuccess) {
-                                EquipmentSlot equipmentSlot = stack.equals(playerEntity.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
-                                stack.damage(1, user, ((userx) -> {
-                                    userx.sendEquipmentBreakStatus(equipmentSlot);
-                                }));
-                            }
+                    if (entity instanceof BrushableEntity brushAble) {
+                        brushSuccess = brushAble.brush(playerEntity, hitResult.getPos());
+                        if (brushSuccess) {
+                            EquipmentSlot equipmentSlot = stack.equals(playerEntity.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
+                            stack.damage(1, user, ((userx) -> {
+                                userx.sendEquipmentBreakStatus(equipmentSlot);
+                            }));
                         }
                     }
 
