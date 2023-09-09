@@ -19,7 +19,7 @@ public class ChickenMixin {
     private static final String BRUSH_COUNT_TIME_KEY = "UsefulBrush.BrushCountTime";
 
     @Unique
-    private int brushCountTime = 0;
+    public int brushCountTime = 0;
 
     @Inject (method = "writeCustomDataToNbt", at = @At (value = "TAIL"))
     public void writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {

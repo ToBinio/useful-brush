@@ -6,18 +6,14 @@
   "mixins": [
     "BrushItemMixin",
     "BrushItemInvoker",
-    "entity.sheep.SheepBrushableMixin",
     "entity.sheep.SheepBrushCountMixin",
     "entity.sheep.SheepMixin",
     "entity.sheep.SheepAccessor",
-    "entity.chicken.ChickenBrushableMixin",
     "entity.chicken.ChickenBrushCountMixin",
     "entity.chicken.ChickenMixin",
-    "entity.mooshroom.MooshroomBrushableMixin",
     "entity.mooshroom.MooshroomBrushCountMixin",
     "entity.mooshroom.MooshroomMixin",
     "entity.mooshroom.MooshroomAccessor",
-    "entity.wolf.WolfBrushableMixin",
     "entity.wolf.WolfMixin",
     "block.CampfireMixin",
     "ItemMixin"

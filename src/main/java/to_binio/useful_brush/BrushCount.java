@@ -1,8 +1,14 @@
 package to_binio.useful_brush;
 
+import org.apache.commons.lang3.NotImplementedException;
+
 public interface BrushCount {
 
-    int getBrushCount();
+    default int getBrushCount() {
+        throw new NotImplementedException();
+    }
 
-    void setBrushCount(int brushCount);
+    default void setBrushCount(int brushCount) {
+        throw new NotImplementedException();
+    }
 }

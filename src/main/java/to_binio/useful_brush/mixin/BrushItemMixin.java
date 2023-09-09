@@ -13,13 +13,12 @@ import net.minecraft.loot.LootTable;
 import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.loot.context.LootContextTypes;
-import net.minecraft.particle.ParticleEffect;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -31,8 +30,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import to_binio.useful_brush.BrushableBlock;
-import to_binio.useful_brush.BrushableEntity;
 import to_binio.useful_brush.UsefulBrush;
+import to_binio.useful_brush.event.BrushEntityEvent;
 
 @Mixin (BrushItem.class)
 public class BrushItemMixin {
@@ -106,19 +105,16 @@ public class BrushItemMixin {
 
                     Entity entity = entityHitResult.getEntity();
 
-                    boolean brushSuccess = false;
+                    ActionResult brushResult = BrushEntityEvent.getEvent(entity.getClass()).invoker().brush(entity, playerEntity, hitResult.getPos());
 
-                    if (entity instanceof BrushableEntity brushAble) {
-                        brushSuccess = brushAble.brush(playerEntity, hitResult.getPos());
-                        if (brushSuccess) {
-                            EquipmentSlot equipmentSlot = stack.equals(playerEntity.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
-                            stack.damage(1, user, ((userx) -> {
-                                userx.sendEquipmentBreakStatus(equipmentSlot);
-                            }));
-                        }
+                    if (brushResult == ActionResult.SUCCESS && !world.isClient()) {
+                        EquipmentSlot equipmentSlot = stack.equals(playerEntity.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
+                        stack.damage(1, user, ((userx) -> {
+                            userx.sendEquipmentBreakStatus(equipmentSlot);
+                        }));
                     }
 
-                    if (!brushSuccess) {
+                    if (brushResult == ActionResult.PASS) {
                         world.playSound(playerEntity, entity.getBlockPos(), SoundEvents.ITEM_BRUSH_BRUSHING_GENERIC, SoundCategory.BLOCKS);
                     }
                 }
