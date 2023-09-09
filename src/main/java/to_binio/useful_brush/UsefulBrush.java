@@ -15,9 +15,11 @@ public class UsefulBrush implements ModInitializer {
     public static final String MOD_ID = "useful_brush";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-    public static final int SHEEP_MAX_BRUSH_COUNT = 3;
-    public static final int CHICKEN_MAX_BRUSH_COUNT = 2;
-    public static final int MOOSHROOM_MAX_BRUSH_COUNT = 1;
+    public static final int SHEEP_DROP_COUNT = 3;
+    public static final int CHICKEN_DROP_COUNT = 2;
+    public static final int MOOSHROOM_DROP_COUNT = 1;
+
+    public static final int BASE_BRUSH_COUNT = 15;
 
     public static final HashMap<Block, BrushableBlockEntry> BRUSHABLE_BLOCKS = new HashMap<>();
 //    public static final HashMap<BlockState, BlockState> CLEAN_ABLE_BLOCK_STATES = new HashMap<>();

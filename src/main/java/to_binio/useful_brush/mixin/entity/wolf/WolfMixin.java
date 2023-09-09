@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin (WolfEntity.class)
 public class WolfMixin {
     @Inject (at = @At (value = "INVOKE", ordinal = 0, target = "Lnet/minecraft/entity/passive/WolfEntity;setSitting(Z)V"), method = "interactMob", cancellable = true)
-    public void sitting(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
+    private void sitting(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
         ItemStack itemStack = player.getStackInHand(hand);
 
         if (itemStack.getItem() instanceof BrushItem) {

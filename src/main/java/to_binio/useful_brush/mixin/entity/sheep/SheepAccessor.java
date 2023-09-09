@@ -11,7 +11,7 @@ import java.util.Map;
 @Mixin (SheepEntity.class)
 public interface SheepAccessor {
     @Accessor ("DROPS")
-    public static Map<DyeColor, ItemConvertible> getDrops() {
+    static Map<DyeColor, ItemConvertible> getDrops() {
         throw new AssertionError();
     }
 }

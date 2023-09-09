@@ -29,7 +29,7 @@ public class SheepMixin {
 
 
     @Inject (method = "writeCustomDataToNbt", at = @At (value = "TAIL"))
-    public void writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
+    private void writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
 
         BrushCount brushCount = (BrushCount) this;
 
@@ -38,7 +38,7 @@ public class SheepMixin {
     }
 
     @Inject (method = "readCustomDataFromNbt", at = @At (value = "TAIL"))
-    public void readCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
+    private void readCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
 
         BrushCount brushCount = (BrushCount) this;
 
@@ -47,7 +47,7 @@ public class SheepMixin {
     }
 
     @Inject (method = "tickMovement", at = @At (value = "TAIL"))
-    public void tickMovement(CallbackInfo ci) {
+    private void tickMovement(CallbackInfo ci) {
 
         BrushCount brushCount = (BrushCount) this;
 

@@ -5,14 +5,16 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "BrushItemMixin",
-    "entity.sheep.SheepBrushCountMixin",
-    "entity.sheep.SheepMixin",
-    "entity.sheep.SheepAccessor",
+    "ItemMixin",
+    "entity.LivingEntityMixin",
     "entity.chicken.ChickenBrushCountMixin",
     "entity.chicken.ChickenMixin",
+    "entity.mooshroom.MooshroomAccessor",
     "entity.mooshroom.MooshroomBrushCountMixin",
     "entity.mooshroom.MooshroomMixin",
-    "entity.mooshroom.MooshroomAccessor",
+    "entity.sheep.SheepAccessor",
+    "entity.sheep.SheepBrushCountMixin",
+    "entity.sheep.SheepMixin",
     "entity.wolf.WolfMixin"
   ],
   "client": [

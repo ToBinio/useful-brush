@@ -19,10 +19,10 @@ public class ChickenMixin {
     private static final String BRUSH_COUNT_TIME_KEY = "UsefulBrush.BrushCountTime";
 
     @Unique
-    public int brushCountTime = 0;
+    private int brushCountTime = 0;
 
     @Inject (method = "writeCustomDataToNbt", at = @At (value = "TAIL"))
-    public void writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
+    private void writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
 
         BrushCount brushCount = (BrushCount) this;
 
@@ -31,7 +31,7 @@ public class ChickenMixin {
     }
 
     @Inject (method = "readCustomDataFromNbt", at = @At (value = "TAIL"))
-    public void readCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
+    private void readCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
 
         BrushCount brushCount = (BrushCount) this;
 
@@ -40,7 +40,7 @@ public class ChickenMixin {
     }
 
     @Inject (method = "tickMovement", at = @At (value = "TAIL"))
-    public void tickMovement(CallbackInfo ci) {
+    private void tickMovement(CallbackInfo ci) {
 
         BrushCount brushCount = (BrushCount) this;
 

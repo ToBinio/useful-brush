@@ -8,7 +8,6 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BrushItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.context.LootContextParameterSet;
@@ -31,19 +30,16 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import to_binio.useful_brush.UsefulBrush;
 import to_binio.useful_brush.event.BrushBlockEvent;
 import to_binio.useful_brush.event.BrushEntityEvent;
 
 @Mixin (BrushItem.class)
-public abstract class BrushItemMixin extends Item {
+public abstract class BrushItemMixin extends ItemMixin {
 
     @Shadow
     protected abstract HitResult getHitResult(LivingEntity user);
-
-    public BrushItemMixin(Settings settings) {
-        super(settings);
-    }
 
     @Inject (at = @At (value = "INVOKE", target = "Lnet/minecraft/world/World;playSound(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;)V"), method = "usageTick")
     private void usageTickBlock(World world, LivingEntity user, ItemStack stack, int remainingUseTicks, CallbackInfo ci,
@@ -141,12 +137,14 @@ public abstract class BrushItemMixin extends Item {
     }
 
     @Override
-    public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
+    protected void useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand,
+            CallbackInfoReturnable<ActionResult> cir) {
+
         if (user != null && this.getHitResult(user).getType() == HitResult.Type.ENTITY) {
             user.setCurrentHand(hand);
         }
 
-        return ActionResult.CONSUME;
+        cir.setReturnValue(ActionResult.CONSUME);
     }
 
     //        BlockState blockStateToConvert = UsefulBrush.CLEAN_ABLE_BLOCK_STATES.get(block);

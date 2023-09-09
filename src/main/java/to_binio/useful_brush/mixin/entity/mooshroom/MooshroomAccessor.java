@@ -27,5 +27,5 @@ import to_binio.useful_brush.BrushCount;
 public interface MooshroomAccessor {
 
     @Invoker ("chooseBabyType")
-    public MooshroomEntity.Type invokerChooseBabyType(MooshroomEntity mooshroom);
+    MooshroomEntity.Type invokerChooseBabyType(MooshroomEntity mooshroom);
 }
