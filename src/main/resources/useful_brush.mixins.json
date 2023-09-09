@@ -5,7 +5,6 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "BrushItemMixin",
-    "BrushItemInvoker",
     "entity.sheep.SheepBrushCountMixin",
     "entity.sheep.SheepMixin",
     "entity.sheep.SheepAccessor",
@@ -14,8 +13,7 @@
     "entity.mooshroom.MooshroomBrushCountMixin",
     "entity.mooshroom.MooshroomMixin",
     "entity.mooshroom.MooshroomAccessor",
-    "entity.wolf.WolfMixin",
-    "ItemMixin"
+    "entity.wolf.WolfMixin"
   ],
   "client": [
   ],
