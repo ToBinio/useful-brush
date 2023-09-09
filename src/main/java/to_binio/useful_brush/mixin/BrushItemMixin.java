@@ -29,35 +29,37 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import to_binio.useful_brush.BrushableBlock;
 import to_binio.useful_brush.UsefulBrush;
+import to_binio.useful_brush.event.BrushBlockEvent;
 import to_binio.useful_brush.event.BrushEntityEvent;
 
 @Mixin (BrushItem.class)
 public class BrushItemMixin {
 
-    @Inject (at = @At (value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/World;getBlockEntity(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/entity/BlockEntity;"), method = "usageTick")
+    @Inject (at = @At (value = "INVOKE", target = "Lnet/minecraft/world/World;playSound(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;)V"), method = "usageTick")
     private void usageTickBlock(World world, LivingEntity user, ItemStack stack, int remainingUseTicks, CallbackInfo ci,
             @Local PlayerEntity playerEntity, @Local HitResult hitResult, @Local BlockHitResult blockHitResult,
             @Local BlockPos blockPos) {
-        BlockState block = world.getBlockState(blockPos);
+        BlockState blockState = world.getBlockState(blockPos);
 
-        var blockEntry = UsefulBrush.BRUSHABLE_BLOCKS.get(block.getBlock());
+        var blockEntry = UsefulBrush.BRUSHABLE_BLOCKS.get(blockState.getBlock());
 
         if (blockEntry != null) {
 
-            world.setBlockState(blockPos, blockEntry.block().getStateWithProperties(block));
+            world.setBlockState(blockPos, blockEntry.block().getStateWithProperties(blockState));
 
-            EquipmentSlot equipmentSlot = stack.equals(playerEntity.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
-            stack.damage(1, user, (userx) -> {
-                userx.sendEquipmentBreakStatus(equipmentSlot);
-            });
+            if (!world.isClient()) {
+                EquipmentSlot equipmentSlot = stack.equals(playerEntity.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
+                stack.damage(1, user, (userx) -> {
+                    userx.sendEquipmentBreakStatus(equipmentSlot);
+                });
+            }
 
             if (blockEntry.lootTable() != null) {
                 var lootTable = world.getServer().getLootManager().getLootTable(blockEntry.lootTable());
 
                 if (lootTable != LootTable.EMPTY) {
-                    LootContextParameterSet.Builder builder = (new LootContextParameterSet.Builder((ServerWorld) world)).add(LootContextParameters.ORIGIN, blockPos.toCenterPos()).add(LootContextParameters.TOOL, ItemStack.EMPTY).add(LootContextParameters.BLOCK_STATE, block);
+                    LootContextParameterSet.Builder builder = (new LootContextParameterSet.Builder((ServerWorld) world)).add(LootContextParameters.ORIGIN, blockPos.toCenterPos()).add(LootContextParameters.TOOL, ItemStack.EMPTY).add(LootContextParameters.BLOCK_STATE, blockState);
 
                     LootContextParameterSet lootContextParameterSet = builder.build(LootContextTypes.BLOCK);
                     lootTable.generateLoot(lootContextParameterSet, 0L, itemStack -> {
@@ -79,10 +81,15 @@ public class BrushItemMixin {
                     UsefulBrush.LOGGER.error("Could not find loot_table '%s'".formatted(blockEntry.lootTable()));
                 }
             }
-        }
+        } else {
+            ActionResult brushResult = BrushBlockEvent.getEvent(blockState.getBlock().getClass()).invoker().brush(playerEntity, blockPos);
 
-        if (block.getBlock() instanceof BrushableBlock brushAbleBlock) {
-            brushAbleBlock.brush(playerEntity, blockPos);
+            if (brushResult == ActionResult.SUCCESS && !world.isClient()) {
+                EquipmentSlot equipmentSlot = stack.equals(playerEntity.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
+                stack.damage(1, user, ((userx) -> {
+                    userx.sendEquipmentBreakStatus(equipmentSlot);
+                }));
+            }
         }
     }
 

@@ -15,7 +15,6 @@
     "entity.mooshroom.MooshroomMixin",
     "entity.mooshroom.MooshroomAccessor",
     "entity.wolf.WolfMixin",
-    "block.CampfireMixin",
     "ItemMixin"
   ],
   "client": [

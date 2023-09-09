@@ -146,14 +146,6 @@ public class BrushableEntities {
     }
 
     public static boolean shouldDrop(Random random, int brushCount, int goalAmount) {
-
-        UsefulBrush.LOGGER.info("brushCount: " + brushCount);
-        UsefulBrush.LOGGER.info("goal: " + goalAmount);
-
-        int goal = (int) (10 / Math.pow((double) (Math.max(goalAmount, 1)) / (brushCount + 1), 2));
-
-        UsefulBrush.LOGGER.info("base: " + goal);
-
-        return random.nextBetween(0, goal) == 0;
+        return random.nextBetween(0, (int) (10 / Math.pow((double) (Math.max(goalAmount, 1)) / (brushCount + 1), 2))) == 0;
     }
 }
