@@ -37,7 +37,7 @@ public class BrushableEntities {
                 world.addParticle(blockStateParticleEffect, brushLocation.x, brushLocation.y + chickenHeight, brushLocation.z, world.getRandom().nextDouble() - 0.5, world.getRandom().nextDouble(), world.getRandom().nextDouble() - .5);
             }
 
-            if (chicken.getBrushCount() >= UsefulBrush.CHICKEN_MAX_BRUSH_COUNT * (chicken.isBaby() ? 0.5 : 1) || Random.create().nextBetween(0, 5) != 0) {
+            if (!shouldDrop(random, chicken.getBrushCount(), (int) (UsefulBrush.CHICKEN_MAX_BRUSH_COUNT * (chicken.isBaby() ? 0.5 : 1)))) {
                 return ActionResult.PASS;
             }
 
@@ -64,7 +64,7 @@ public class BrushableEntities {
                 world.addParticle(blockStateParticleEffect, brushLocation.x, brushLocation.y + mooshroomHeight, brushLocation.z, 3.0 * world.getRandom().nextDouble() - 1.5, 2.0 * world.getRandom().nextDouble(), 3.0 * world.getRandom().nextDouble() - 1.5);
             }
 
-            if (mooshroom.getBrushCount() >= UsefulBrush.MOOSHROOM_MAX_BRUSH_COUNT || random.nextBetween(0, 10) != 0) {
+            if (!shouldDrop(random, mooshroom.getBrushCount(), (int) (UsefulBrush.MOOSHROOM_MAX_BRUSH_COUNT * (mooshroom.isBaby() ? 0.5 : 1)))) {
                 return ActionResult.PASS;
             }
 
@@ -97,7 +97,9 @@ public class BrushableEntities {
                 world.addParticle(blockStateParticleEffect, brushLocation.x, brushLocation.y + sheepHeight, brushLocation.z, 3.0 * world.getRandom().nextDouble() - 1.5, 2.0 * world.getRandom().nextDouble(), 3.0 * world.getRandom().nextDouble() - 1.5);
             }
 
-            if (sheep.getBrushCount() >= UsefulBrush.SHEEP_MAX_BRUSH_COUNT * (sheep.isBaby() ? 0.5 : 1) || random.nextBetween(0, 5) != 0) {
+            if (world.isClient()) return ActionResult.PASS;
+
+            if (!shouldDrop(random, sheep.getBrushCount(), (int) (UsefulBrush.SHEEP_MAX_BRUSH_COUNT * (sheep.isBaby() ? 0.5 : 1)))) {
                 return ActionResult.PASS;
             }
 
@@ -141,5 +143,17 @@ public class BrushableEntities {
 
             return ActionResult.SUCCESS;
         });
+    }
+
+    public static boolean shouldDrop(Random random, int brushCount, int goalAmount) {
+
+        UsefulBrush.LOGGER.info("brushCount: " + brushCount);
+        UsefulBrush.LOGGER.info("goal: " + goalAmount);
+
+        int goal = (int) (10 / Math.pow((double) (Math.max(goalAmount, 1)) / (brushCount + 1), 2));
+
+        UsefulBrush.LOGGER.info("base: " + goal);
+
+        return random.nextBetween(0, goal) == 0;
     }
 }
