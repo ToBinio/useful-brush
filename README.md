@@ -16,7 +16,9 @@ a fabric mod which adds more functionalities to the brush
 
 ### add brushable blocks
 
-you can add more simple brushable blocks by adding a new `.json` file to `data/<namespace>/brushables/` the name of the
-file can be anything.
+you can add more simple brushable blocks by adding datapack.
+In wich you need to add a `brushables` folder.
+The path should look something like this: `datapacks/<datapack-name>/data/<namespace>/brushables/`.
+In this folder you can add new `.json` files the name of the file can be anything.
 
-for examples of the syntax have a look at [here](src/main/resources/data/useful_brush/brushables)
+for examples of the syntax have a look [here](src/main/resources/data/useful_brush/brushables)
