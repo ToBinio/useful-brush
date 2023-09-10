@@ -15,7 +15,8 @@
     "entity.sheep.SheepAccessor",
     "entity.sheep.SheepBrushCountMixin",
     "entity.sheep.SheepMixin",
-    "entity.wolf.WolfMixin"
+    "entity.wolf.WolfMixin",
+    "blockEntity.CampfireBlockEntityAccessor"
   ],
   "client": [
   ],

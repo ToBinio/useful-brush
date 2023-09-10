@@ -10,7 +10,7 @@ a fabric mod which adds more functionalities to the brush
 * brush sheep to drop strings
 * brush mooshroom to drop mushrooms
 * pat you dog
-* brush a campfire to put it out (like a shovel)
+* brush a campfire to make it burn better thus cook you food faster
 
 <hr>
 

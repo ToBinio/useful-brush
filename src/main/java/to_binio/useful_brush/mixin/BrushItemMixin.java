@@ -105,7 +105,6 @@ public abstract class BrushItemMixin extends ItemMixin {
             @Local (ordinal = 0) PlayerEntity playerEntity, @Local (ordinal = 0) HitResult hitResult) {
 
         BrushItem item = (BrushItem) (Object) this;
-        Arm arm = user.getActiveHand() == Hand.MAIN_HAND ? playerEntity.getMainArm() : playerEntity.getMainArm().getOpposite();
 
         if (hitResult instanceof EntityHitResult entityHitResult) {
 
