@@ -3,7 +3,11 @@ package to_binio.useful_brush;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.block.Block;
+import net.minecraft.command.argument.BlockArgumentParser;
+import net.minecraft.command.argument.BlockStateArgumentType;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

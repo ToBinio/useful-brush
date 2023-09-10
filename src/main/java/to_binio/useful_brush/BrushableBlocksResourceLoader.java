@@ -44,8 +44,13 @@ public class BrushableBlocksResourceLoader implements SimpleSynchronousResourceR
 
                         if (blockEntry == null || from == null) continue;
 
-                        UsefulBrush.BRUSHABLE_BLOCKS.put(from, blockEntry);
-                        count++;
+                        var previous = UsefulBrush.BRUSHABLE_BLOCKS.put(from, blockEntry);
+
+                        if (previous != null) {
+                            UsefulBrush.LOGGER.warn("%s -> %s got overwritten with %s".formatted(from, previous.block().toString(), blockEntry.block().toString()));
+                        } else {
+                            count++;
+                        }
                     }
 
                 } catch (IOException e) {
