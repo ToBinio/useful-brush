@@ -17,6 +17,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import to_binio.useful_brush.config.UsefulBrushConfig;
 import to_binio.useful_brush.event.BrushEntityEvent;
 import to_binio.useful_brush.mixin.entity.sheep.SheepAccessor;
 
@@ -37,7 +38,7 @@ public class BrushableEntities {
                 world.addParticle(blockStateParticleEffect, brushLocation.x, brushLocation.y + chickenHeight, brushLocation.z, world.getRandom().nextDouble() - 0.5, world.getRandom().nextDouble(), world.getRandom().nextDouble() - .5);
             }
 
-            if (!shouldDrop(random, chicken.getBrushCount(), (int) (UsefulBrush.CHICKEN_DROP_COUNT * (chicken.isBaby() ? 0.5 : 1)))) {
+            if (!shouldDrop(random, chicken.getBrushCount(), (int) (UsefulBrushConfig.INSTANCE.CHICKEN_DROP_COUNT * (chicken.isBaby() ? 0.5 : 1)))) {
                 return ActionResult.PASS;
             }
 
@@ -64,7 +65,7 @@ public class BrushableEntities {
                 world.addParticle(blockStateParticleEffect, brushLocation.x, brushLocation.y + mooshroomHeight, brushLocation.z, 3.0 * world.getRandom().nextDouble() - 1.5, 2.0 * world.getRandom().nextDouble(), 3.0 * world.getRandom().nextDouble() - 1.5);
             }
 
-            if (!shouldDrop(random, mooshroom.getBrushCount(), (int) (UsefulBrush.MOOSHROOM_DROP_COUNT * (mooshroom.isBaby() ? 0.5 : 1)))) {
+            if (!shouldDrop(random, mooshroom.getBrushCount(), (int) (UsefulBrushConfig.INSTANCE.MOOSHROOM_DROP_COUNT * (mooshroom.isBaby() ? 0.5 : 1)))) {
                 return ActionResult.PASS;
             }
 
@@ -99,7 +100,7 @@ public class BrushableEntities {
 
             if (world.isClient()) return ActionResult.PASS;
 
-            if (!shouldDrop(random, sheep.getBrushCount(), (int) (UsefulBrush.SHEEP_DROP_COUNT * (sheep.isBaby() ? 0.5 : 1)))) {
+            if (!shouldDrop(random, sheep.getBrushCount(), (int) (UsefulBrushConfig.INSTANCE.SHEEP_DROP_COUNT * (sheep.isBaby() ? 0.5 : 1)))) {
                 return ActionResult.PASS;
             }
 
@@ -146,6 +147,6 @@ public class BrushableEntities {
     }
 
     public static boolean shouldDrop(Random random, int brushCount, int goalAmount) {
-        return random.nextBetween(0, (int) (UsefulBrush.BASE_BRUSH_COUNT / Math.pow((double) (Math.max(goalAmount, 1)) / (brushCount + 1), 2))) == 0;
+        return random.nextBetween(0, (int) (UsefulBrushConfig.INSTANCE.BASE_BRUSH_COUNT / Math.pow((double) (Math.max(goalAmount, 1)) / (brushCount + 1), 2))) == 0;
     }
 }
