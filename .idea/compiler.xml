@@ -6,8 +6,8 @@
         <outputRelativeToContentRoot value="true" />
         <option name="defaultObfuscationEnv" value="named:intermediary" />
         <option name="inMapFileNamedIntermediary" value="C:\Users\tobia\.gradle\caches\fabric-loom\1.20.1\net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2\mappings.tiny" />
-        <option name="outMapFileNamedIntermediary" value="C:\Users\tobia\Desktop\Projects\java\useful-brush\build\loom-cache\mixin-map-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.main.tiny" />
-        <option name="outRefMapFile" value="C:\Users\tobia\Desktop\Projects\java\useful-brush\build\classes\java\main\useful-brush-refmap.json" />
+        <option name="outMapFileNamedIntermediary" value="D:\Projects\java\Minecraft\useful-brush\build\loom-cache\mixin-map-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.main.tiny" />
+        <option name="outRefMapFile" value="D:\Projects\java\Minecraft\useful-brush\build\classes\java\main\useful-brush-refmap.json" />
         <option name="quiet" value="true" />
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.github.llamalad7/mixinextras-fabric/0.2.0-rc.1/2436832f28f3de6223211946126bdf8b84fc755f/mixinextras-fabric-0.2.0-rc.1.jar" />

@@ -50,10 +50,9 @@ public abstract class BrushItemMixin extends ItemMixin {
         var blockEntry = UsefulBrush.BRUSHABLE_BLOCKS.get(blockState.getBlock());
 
         if (blockEntry != null) {
-
-            world.setBlockState(blockPos, blockEntry.block().getStateWithProperties(blockState));
-
             if (!world.isClient()) {
+                world.setBlockState(blockPos, blockEntry.block().getStateWithProperties(blockState));
+
                 EquipmentSlot equipmentSlot = stack.equals(playerEntity.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
                 stack.damage(1, user, (userx) -> {
                     userx.sendEquipmentBreakStatus(equipmentSlot);
