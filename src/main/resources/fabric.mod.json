@@ -3,12 +3,17 @@
   "id": "useful_brush",
   "version": "${version}",
   "name": "Useful Brush",
-  "description": "",
-  "authors": [],
+  "description": "Adds more functionalities to the brush",
+  "authors": [
+    "ToBinio"
+  ],
   "contact": {
-    "repo": "https://github.com/tobia/useful-brush"
+    "repo": "https://github.com/toBinio/useful-brush",
+    "homepage": "https://github.com/toBinio/useful-brush",
+    "issues": "https://github.com/toBinio/useful-brush/issues",
+    "sources": "https://github.com/toBinio/useful-brush"
   },
-  "license": "LGPL-3.0",
+  "license": "MIT",
   "icon": "assets/useful_brush/icon.png",
   "environment": "*",
   "entrypoints": {
