@@ -172,13 +172,9 @@ public abstract class BrushItemMixin extends ItemMixin {
 
         HitResult hitResult2 = ProjectileUtil.getEntityCollision(world, user, pos, vec3d, user.getBoundingBox().stretch(velocity).expand(1.0), (entity) -> !entity.isSpectator() && entity.canHit());
 
-        UsefulBrush.LOGGER.info(hitResult.toString());
-
         if (hitResult2 != null) {
             hitResult = hitResult2;
         }
-
-        UsefulBrush.LOGGER.info(hitResult.getType().name());
 
         if (hitResult instanceof BlockHitResult hit && hit.getType() == HitResult.Type.BLOCK) {
 
@@ -188,7 +184,5 @@ public abstract class BrushItemMixin extends ItemMixin {
                 cir.setReturnValue(hitResult);
             }
         }
-
-
     }
 }
