@@ -1,8 +1,6 @@
 package to_binio.useful_brush;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.CampfireBlock;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
@@ -38,5 +36,25 @@ public class BrushableBlocks {
             return ActionResult.SUCCESS;
         });
 
+        BrushBlockEvent.getEvent(SnowBlock.class).register((playerEntity, blockPos) -> {
+            World world = playerEntity.getWorld();
+
+            if (world.isClient()) {
+                return ActionResult.SUCCESS;
+            }
+
+            BlockState blockState = world.getBlockState(blockPos);
+
+            int newHeight = blockState.get(SnowBlock.LAYERS) - 1;
+
+            if (newHeight >= 1) {
+                world.setBlockState(blockPos, blockState.with(SnowBlock.LAYERS, newHeight));
+            } else {
+                world.setBlockState(blockPos, Blocks.AIR.getDefaultState());
+            }
+
+
+            return ActionResult.SUCCESS;
+        });
     }
 }

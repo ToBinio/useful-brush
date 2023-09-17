@@ -6,6 +6,7 @@
   "mixins": [
     "BrushItemMixin",
     "ItemMixin",
+    "blockEntity.CampfireBlockEntityAccessor",
     "entity.LivingEntityMixin",
     "entity.chicken.ChickenBrushCountMixin",
     "entity.chicken.ChickenMixin",
@@ -15,8 +16,7 @@
     "entity.sheep.SheepAccessor",
     "entity.sheep.SheepBrushCountMixin",
     "entity.sheep.SheepMixin",
-    "entity.wolf.WolfMixin",
-    "blockEntity.CampfireBlockEntityAccessor"
+    "entity.wolf.WolfMixin"
   ],
   "client": [
   ],

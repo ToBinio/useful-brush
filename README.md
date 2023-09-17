@@ -6,6 +6,7 @@ a fabric mod which adds more functionalities to the brush
 
 * convert mossy blocks to their normal form (sometimes drop slime)
 * convert infested blocks to their normal form
+* brush snow to remove one layer
 * brush chickens to drop feathers
 * brush sheep to drop strings
 * brush mooshrooms to drop mushrooms

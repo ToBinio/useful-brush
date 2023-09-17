@@ -2,17 +2,20 @@ package to_binio.useful_brush.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.BrushItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.loot.context.LootContextTypes;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -24,19 +27,29 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import to_binio.useful_brush.UsefulBrush;
 import to_binio.useful_brush.event.BrushBlockEvent;
 import to_binio.useful_brush.event.BrushEntityEvent;
 
+import java.util.function.Predicate;
+
 @Mixin (BrushItem.class)
 public abstract class BrushItemMixin extends ItemMixin {
+
+    @Shadow
+    @Final
+    private static double MAX_BRUSH_DISTANCE;
 
     @Shadow
     protected abstract HitResult getHitResult(LivingEntity user);
@@ -145,33 +158,37 @@ public abstract class BrushItemMixin extends ItemMixin {
         cir.setReturnValue(ActionResult.CONSUME);
     }
 
-    //        BlockState blockStateToConvert = UsefulBrush.CLEAN_ABLE_BLOCK_STATES.get(block);
-//
-//        if (blockStateToConvert != null) {
-//
-//            world.setBlockState(blockPos, blockStateToConvert);
-//
-//            EquipmentSlot equipmentSlot = stack.equals(playerEntity.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
-//            stack.damage(1, user, (userx) -> {
-//                userx.sendEquipmentBreakStatus(equipmentSlot);
-//            });
-//        }
-//}
-//
-//    @Redirect (method = "getHitResult", at = @At (value = "INVOKE", target = "Lnet/minecraft/entity/projectile/ProjectileUtil;getCollision(Lnet/minecraft/entity/Entity;Ljava/util/function/Predicate;D)Lnet/minecraft/util/hit/HitResult;"))
-//    public HitResult getHitResult(Entity entity, Predicate<Entity> predicate, double range) {
-//        return hit(entity, range);
-//    }
-//
-//    @Unique
-//    private static HitResult hit(Entity user, double range) {
-//
-//        Vec3d velocity = user.getRotationVec(0.0F).multiply(range);
-//        World world = user.getWorld();
-//        Vec3d pos = user.getEyePos();
-//
-//        Vec3d vec3d = pos.add(velocity);
-//
-//        return world.raycast(new RaycastContext(pos, vec3d, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, user));
-//    }
+    @Inject (method = "getHitResult", at = @At (value = "HEAD"), cancellable = true)
+    private void getHitResul2(LivingEntity user, CallbackInfoReturnable<HitResult> cir) {
+        Vec3d velocity = user.getRotationVec(0.0F).multiply(MAX_BRUSH_DISTANCE);
+        World world = user.getWorld();
+        Vec3d pos = user.getEyePos();
+
+        Vec3d vec3d = pos.add(velocity);
+        HitResult hitResult = world.raycast(new RaycastContext(pos, vec3d, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, user));
+        if (hitResult.getType() != HitResult.Type.MISS) {
+            vec3d = hitResult.getPos();
+        }
+
+        HitResult hitResult2 = ProjectileUtil.getEntityCollision(world, user, pos, vec3d, user.getBoundingBox().stretch(velocity).expand(1.0), (entity) -> !entity.isSpectator() && entity.canHit());
+
+        UsefulBrush.LOGGER.info(hitResult.toString());
+
+        if (hitResult2 != null) {
+            hitResult = hitResult2;
+        }
+
+        UsefulBrush.LOGGER.info(hitResult.getType().name());
+
+        if (hitResult instanceof BlockHitResult hit && hit.getType() == HitResult.Type.BLOCK) {
+
+            BlockState blockState = user.getWorld().getBlockState(hit.getBlockPos());
+
+            if (UsefulBrush.BRUSHABLE_OUTLINE_BLOCKS.contains(blockState.getBlock())) {
+                cir.setReturnValue(hitResult);
+            }
+        }
+
+
+    }
 }
