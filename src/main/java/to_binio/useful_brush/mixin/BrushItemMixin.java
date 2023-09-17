@@ -99,7 +99,7 @@ public abstract class BrushItemMixin extends ItemMixin {
                 }
             }
         } else {
-            ActionResult brushResult = BrushBlockEvent.getEvent(blockState.getBlock().getClass()).invoker().brush(playerEntity, blockPos);
+            ActionResult brushResult = BrushBlockEvent.getEvent(blockState.getBlock()).invoker().brush(playerEntity, blockPos);
 
             if (brushResult == ActionResult.SUCCESS && !world.isClient()) {
                 EquipmentSlot equipmentSlot = stack.equals(playerEntity.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;

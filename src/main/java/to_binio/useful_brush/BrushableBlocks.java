@@ -14,7 +14,7 @@ public class BrushableBlocks {
 
     public static void register() {
 
-        BrushBlockEvent.getEvent(CampfireBlock.class).register((playerEntity, blockPos) -> {
+        BrushBlockEvent.getEvent(Blocks.CAMPFIRE).register((playerEntity, blockPos) -> {
             World world = playerEntity.getWorld();
             BlockState blockState = world.getBlockState(blockPos);
             CampfireBlockEntityAccessor campfireEntity = (CampfireBlockEntityAccessor) world.getBlockEntity(blockPos);
@@ -36,7 +36,7 @@ public class BrushableBlocks {
             return ActionResult.SUCCESS;
         });
 
-        BrushBlockEvent.getEvent(SnowBlock.class).register((playerEntity, blockPos) -> {
+        BrushBlockEvent.getEvent(Blocks.SNOW).register((playerEntity, blockPos) -> {
             World world = playerEntity.getWorld();
 
             if (world.isClient()) {
@@ -53,6 +53,18 @@ public class BrushableBlocks {
                 world.setBlockState(blockPos, Blocks.AIR.getDefaultState());
             }
 
+
+            return ActionResult.SUCCESS;
+        });
+
+        BrushBlockEvent.getEvent(Blocks.SNOW_BLOCK).register((playerEntity, blockPos) -> {
+            World world = playerEntity.getWorld();
+
+            if (world.isClient()) {
+                return ActionResult.SUCCESS;
+            }
+
+            world.setBlockState(blockPos, Blocks.SNOW.getDefaultState().with(SnowBlock.LAYERS, 7));
 
             return ActionResult.SUCCESS;
         });

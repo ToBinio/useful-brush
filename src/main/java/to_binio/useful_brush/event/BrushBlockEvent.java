@@ -12,10 +12,10 @@ import java.util.Map;
 
 public class BrushBlockEvent {
 
-    private static final Map<Class<? extends Block>, Event<BrushBlock>> EVENTS = new HashMap<>();
+    private static final Map<Block, Event<BrushBlock>> EVENTS = new HashMap<>();
 
-    public static Event<BrushBlock> getEvent(Class<? extends Block> entityClass) {
-        Event<BrushBlock> brushBlockEvent = EVENTS.get(entityClass);
+    public static Event<BrushBlock> getEvent(Block block) {
+        Event<BrushBlock> brushBlockEvent = EVENTS.get(block);
 
         if (brushBlockEvent == null) {
             Event<BrushBlock> event = EventFactory.createArrayBacked(BrushBlock.class, brushEntities -> (playerEntity, blockPos) -> {
@@ -31,7 +31,7 @@ public class BrushBlockEvent {
                 return ActionResult.PASS;
             });
 
-            EVENTS.put(entityClass, event);
+            EVENTS.put(block, event);
             brushBlockEvent = event;
         }
 
