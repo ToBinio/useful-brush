@@ -43,11 +43,7 @@ import to_binio.useful_brush.event.BrushEntityEvent;
 public abstract class BrushItemMixin extends ItemMixin {
 
     @Shadow
-    @Final
-    private static double MAX_BRUSH_DISTANCE;
-
-    @Shadow
-    protected abstract HitResult getHitResult(LivingEntity user);
+    protected abstract HitResult getHitResult(PlayerEntity user);
 
     @Inject (at = @At (value = "INVOKE", target = "Lnet/minecraft/world/World;playSound(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;)V"), method = "usageTick")
     private void usageTickBlock(World world, LivingEntity user, ItemStack stack, int remainingUseTicks, CallbackInfo ci,
@@ -70,7 +66,9 @@ public abstract class BrushItemMixin extends ItemMixin {
                     var lootTable = world.getServer().getLootManager().getLootTable(blockEntry.lootTable());
 
                     if (lootTable != LootTable.EMPTY) {
-                        LootContextParameterSet.Builder builder = (new LootContextParameterSet.Builder((ServerWorld) world)).add(LootContextParameters.ORIGIN, blockPos.toCenterPos()).add(LootContextParameters.TOOL, ItemStack.EMPTY).add(LootContextParameters.BLOCK_STATE, blockState);
+                        LootContextParameterSet.Builder builder = (new LootContextParameterSet.Builder((ServerWorld) world)).add(LootContextParameters.ORIGIN, blockPos.toCenterPos())
+                                .add(LootContextParameters.TOOL, ItemStack.EMPTY)
+                                .add(LootContextParameters.BLOCK_STATE, blockState);
 
                         LootContextParameterSet lootContextParameterSet = builder.build(LootContextTypes.BLOCK);
                         lootTable.generateLoot(lootContextParameterSet, 0L, itemStack -> {
@@ -94,7 +92,9 @@ public abstract class BrushItemMixin extends ItemMixin {
                 }
             }
         } else {
-            ActionResult brushResult = BrushBlockEvent.getEvent(blockState.getBlock()).invoker().brush(playerEntity, blockPos);
+            ActionResult brushResult = BrushBlockEvent.getEvent(blockState.getBlock())
+                    .invoker()
+                    .brush(playerEntity, blockPos);
 
             if (brushResult == ActionResult.SUCCESS && !world.isClient()) {
                 EquipmentSlot equipmentSlot = stack.equals(playerEntity.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
@@ -106,10 +106,9 @@ public abstract class BrushItemMixin extends ItemMixin {
     }
 
 
-    @Inject (at = @At (shift = At.Shift.AFTER, value = "INVOKE_ASSIGN", target = "Lnet/minecraft/item/BrushItem;getHitResult(Lnet/minecraft/entity/LivingEntity;)Lnet/minecraft/util/hit/HitResult;"), method = "usageTick", cancellable = true)
+    @Inject (at = @At (shift = At.Shift.AFTER, value = "INVOKE_ASSIGN", target = "Lnet/minecraft/item/BrushItem;getHitResult(Lnet/minecraft/entity/player/PlayerEntity;)Lnet/minecraft/util/hit/HitResult;"), method = "usageTick", cancellable = true)
     private void usageTickEntity(World world, LivingEntity user, ItemStack stack, int remainingUseTicks,
-            CallbackInfo ci,
-            @Local (ordinal = 0) PlayerEntity playerEntity, @Local (ordinal = 0) HitResult hitResult) {
+            CallbackInfo ci, @Local (ordinal = 0) PlayerEntity playerEntity, @Local (ordinal = 0) HitResult hitResult) {
 
         BrushItem item = (BrushItem) (Object) this;
 
@@ -123,7 +122,9 @@ public abstract class BrushItemMixin extends ItemMixin {
 
                     Entity entity = entityHitResult.getEntity();
 
-                    ActionResult brushResult = BrushEntityEvent.getEvent(entity.getClass()).invoker().brush(entity, playerEntity, hitResult.getPos());
+                    ActionResult brushResult = BrushEntityEvent.getEvent(entity.getClass())
+                            .invoker()
+                            .brush(entity, playerEntity, hitResult.getPos());
 
                     if (brushResult == ActionResult.SUCCESS && !world.isClient()) {
                         EquipmentSlot equipmentSlot = stack.equals(playerEntity.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
@@ -154,15 +155,17 @@ public abstract class BrushItemMixin extends ItemMixin {
     }
 
     @Inject (method = "getHitResult", at = @At (value = "HEAD"), cancellable = true)
-    private void myGetHitResult(LivingEntity user, CallbackInfoReturnable<HitResult> cir) {
+    private void myGetHitResult(PlayerEntity user, CallbackInfoReturnable<HitResult> cir) {
         HitResult hitResult = getSpecialBlockHitResult(user);
         if (hitResult.getType() != HitResult.Type.MISS) {
-            Vec3d velocity = user.getRotationVec(0.0F).multiply(MAX_BRUSH_DISTANCE);
+            Vec3d velocity = user.getRotationVec(0.0F).multiply(PlayerEntity.getReachDistance(user.isCreative()));
             World world = user.getWorld();
             Vec3d from = user.getEyePos();
             Vec3d to = hitResult.getPos();
 
-            HitResult enityHitResult = ProjectileUtil.getEntityCollision(world, user, from, to, user.getBoundingBox().stretch(velocity).expand(1.0), (entity) -> !entity.isSpectator() && entity.canHit());
+            HitResult enityHitResult = ProjectileUtil.getEntityCollision(world, user, from, to, user.getBoundingBox()
+                    .stretch(velocity)
+                    .expand(1.0), (entity) -> !entity.isSpectator() && entity.canHit());
 
             if (enityHitResult == null) {
                 cir.setReturnValue(hitResult);
@@ -171,8 +174,8 @@ public abstract class BrushItemMixin extends ItemMixin {
     }
 
     @Unique
-    private static BlockHitResult getSpecialBlockHitResult(LivingEntity user) {
-        Vec3d velocity = user.getRotationVec(0.0F).multiply(MAX_BRUSH_DISTANCE);
+    private static BlockHitResult getSpecialBlockHitResult(PlayerEntity user) {
+        Vec3d velocity = user.getRotationVec(0.0F).multiply(PlayerEntity.getReachDistance(user.isCreative()));
         World world = user.getWorld();
         Vec3d from = user.getEyePos();
         Vec3d to = from.add(velocity);
