@@ -27,7 +27,8 @@ public class BrushableBlocksResourceLoader implements SimpleSynchronousResourceR
     public void reload(ResourceManager manager) {
         UsefulBrush.BRUSHABLE_BLOCKS.clear();
 
-        Map<Identifier, List<Resource>> brushable = manager.findAllResources("brushables", identifier -> identifier.getPath().endsWith(".json"));
+        Map<Identifier, List<Resource>> brushable = manager.findAllResources("brushables", identifier -> identifier.getPath()
+                .endsWith(".json"));
 
         var count = 0;
 
@@ -47,7 +48,8 @@ public class BrushableBlocksResourceLoader implements SimpleSynchronousResourceR
                         var previous = UsefulBrush.BRUSHABLE_BLOCKS.put(from, blockEntry);
 
                         if (previous != null) {
-                            UsefulBrush.LOGGER.warn("%s -> %s got overwritten with %s".formatted(from, previous.block().toString(), blockEntry.block().toString()));
+                            UsefulBrush.LOGGER.warn("%s -> %s got overwritten with %s".formatted(from, previous.block()
+                                    .toString(), blockEntry.block().toString()));
                         } else {
                             count++;
                         }
@@ -66,7 +68,8 @@ public class BrushableBlocksResourceLoader implements SimpleSynchronousResourceR
     private BrushableBlockEntry parseEntry(JsonElement data) {
 
         String to;
-        Identifier loot_table = null;
+        Identifier lootTable = null;
+        int brushCount = 1;
 
         if (data.isJsonObject()) {
 
@@ -76,10 +79,19 @@ public class BrushableBlocksResourceLoader implements SimpleSynchronousResourceR
 
             if (value.has("loot_table")) {
                 String lootTableString = value.get("loot_table").getAsString();
-                loot_table = Identifier.tryParse(lootTableString);
+                lootTable = Identifier.tryParse(lootTableString);
 
-                if (loot_table == null) {
+                if (lootTable == null) {
                     UsefulBrush.LOGGER.error("Could not find loot_table '%s'".formatted(lootTableString));
+                }
+            }
+
+            if (value.has("brush_count")) {
+                try {
+                    brushCount = value.get("brush_count").getAsInt();
+                } catch (Exception e) {
+                    UsefulBrush.LOGGER.error("Could not parse brush_count '%s'".formatted(value.get("brush_count")
+                            .getAsString()));
                 }
             }
 
@@ -91,7 +103,7 @@ public class BrushableBlocksResourceLoader implements SimpleSynchronousResourceR
 
         if (block == null) return null;
 
-        return new BrushableBlockEntry(block, loot_table);
+        return new BrushableBlockEntry(block, lootTable, brushCount);
     }
 
     @Nullable

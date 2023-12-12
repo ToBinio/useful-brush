@@ -1,0 +1,14 @@
+{
+  "sand": {
+    "block": "air",
+    "brush_count": 3
+  },
+  "gravel": {
+    "block": "air",
+    "brush_count": 3
+  },
+  "red_sand": {
+    "block": "air",
+    "brush_count": 3
+  }
+}
