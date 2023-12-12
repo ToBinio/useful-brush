@@ -17,6 +17,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -32,8 +33,12 @@ import static to_binio.useful_brush.entities.BrushableEntities.brushEntity;
 @Mixin (BrushItem.class)
 public abstract class BrushItemMixin extends ItemMixin {
 
+    @Unique
+    @Final
+    private static double MAX_BRUSH_DISTANCE;
+
     @Shadow
-    protected abstract HitResult getHitResult(PlayerEntity user);
+    protected abstract HitResult getHitResult(LivingEntity user);
 
     @Inject (at = @At (value = "INVOKE", target = "Lnet/minecraft/world/World;playSound(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;)V"), method = "usageTick")
     private void usageTickBlock(World world, LivingEntity user, ItemStack stack, int remainingUseTicks, CallbackInfo ci,
@@ -44,7 +49,7 @@ public abstract class BrushItemMixin extends ItemMixin {
         brushBlock(world, stack, playerEntity, hitResult, blockPos, blockState);
     }
 
-    @Inject (at = @At (shift = At.Shift.AFTER, value = "INVOKE_ASSIGN", target = "Lnet/minecraft/item/BrushItem;getHitResult(Lnet/minecraft/entity/player/PlayerEntity;)Lnet/minecraft/util/hit/HitResult;"), method = "usageTick", cancellable = true)
+    @Inject (at = @At (shift = At.Shift.AFTER, value = "INVOKE_ASSIGN", target = "Lnet/minecraft/item/BrushItem;getHitResult(Lnet/minecraft/entity/LivingEntity;)Lnet/minecraft/util/hit/HitResult;"), method = "usageTick", cancellable = true)
     private void usageTickEntity(World world, LivingEntity user, ItemStack stack, int remainingUseTicks,
             CallbackInfo ci, @Local (ordinal = 0) PlayerEntity playerEntity, @Local (ordinal = 0) HitResult hitResult) {
 
@@ -82,10 +87,10 @@ public abstract class BrushItemMixin extends ItemMixin {
     }
 
     @Inject (method = "getHitResult", at = @At (value = "HEAD"), cancellable = true)
-    private void myGetHitResult(PlayerEntity user, CallbackInfoReturnable<HitResult> cir) {
+    private void myGetHitResult(LivingEntity user, CallbackInfoReturnable<HitResult> cir) {
         HitResult hitResult = getSpecialBlockHitResult(user);
         if (hitResult.getType() != HitResult.Type.MISS) {
-            Vec3d velocity = user.getRotationVec(0.0F).multiply(PlayerEntity.getReachDistance(user.isCreative()));
+            Vec3d velocity = user.getRotationVec(0.0F).multiply(MAX_BRUSH_DISTANCE);
             World world = user.getWorld();
             Vec3d from = user.getEyePos();
             Vec3d to = hitResult.getPos();
@@ -101,8 +106,8 @@ public abstract class BrushItemMixin extends ItemMixin {
     }
 
     @Unique
-    private static BlockHitResult getSpecialBlockHitResult(PlayerEntity user) {
-        Vec3d velocity = user.getRotationVec(0.0F).multiply(PlayerEntity.getReachDistance(user.isCreative()));
+    private static BlockHitResult getSpecialBlockHitResult(LivingEntity user) {
+        Vec3d velocity = user.getRotationVec(0.0F).multiply(MAX_BRUSH_DISTANCE);
         World world = user.getWorld();
         Vec3d from = user.getEyePos();
         Vec3d to = from.add(velocity);
