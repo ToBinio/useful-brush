@@ -1,4 +1,4 @@
-package to_binio.useful_brush;
+package to_binio.useful_brush.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.util.Identifier;

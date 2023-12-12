@@ -1,4 +1,4 @@
-package to_binio.useful_brush;
+package to_binio.useful_brush.entities;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -21,7 +21,7 @@ import to_binio.useful_brush.config.UsefulBrushConfig;
 import to_binio.useful_brush.event.BrushEntityEvent;
 import to_binio.useful_brush.mixin.entity.sheep.SheepAccessor;
 
-public class BrushableEntities {
+public class BrushableEntityEvents {
 
     public static void register() {
         BrushEntityEvent.getEvent(ChickenEntity.class).register((entity, playerEntity, brushLocation) -> {

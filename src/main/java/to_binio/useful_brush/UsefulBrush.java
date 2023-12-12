@@ -4,15 +4,14 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.command.argument.BlockArgumentParser;
-import net.minecraft.command.argument.BlockStateArgumentType;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.resource.ResourceType;
-import net.minecraft.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import to_binio.useful_brush.config.SimpleConfig;
+import to_binio.useful_brush.blocks.BrushableBlockEntry;
+import to_binio.useful_brush.blocks.BrushableBlockEvents;
+import to_binio.useful_brush.blocks.BrushableBlocksResourceLoader;
 import to_binio.useful_brush.config.UsefulBrushConfig;
+import to_binio.useful_brush.entities.BrushableEntityEvents;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,7 +38,7 @@ public class UsefulBrush implements ModInitializer {
 
         UsefulBrushConfig.initialize();
 
-        BrushableEntities.register();
-        BrushableBlocks.register();
+        BrushableEntityEvents.register();
+        BrushableBlockEvents.register();
     }
 }

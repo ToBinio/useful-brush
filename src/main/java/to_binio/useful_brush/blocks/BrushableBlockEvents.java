@@ -1,17 +1,12 @@
-package to_binio.useful_brush;
+package to_binio.useful_brush.blocks;
 
 import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldEvents;
 import to_binio.useful_brush.event.BrushBlockEvent;
 import to_binio.useful_brush.mixin.blockEntity.CampfireBlockEntityAccessor;
 
-public class BrushableBlocks {
+public class BrushableBlockEvents {
 
     public static void register() {
 

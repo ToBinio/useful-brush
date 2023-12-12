@@ -1,11 +1,12 @@
-package to_binio.useful_brush;
+package to_binio.useful_brush.blocks;
 
 import net.minecraft.util.math.BlockPos;
+import to_binio.useful_brush.UsefulBrush;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class BrushBlockTimer {
+public class BrushBlockCounter {
 
     private final static Map<Integer, Entry> clientTimes = new HashMap<>();
     private final static Map<Integer, Entry> serverTimes = new HashMap<>();

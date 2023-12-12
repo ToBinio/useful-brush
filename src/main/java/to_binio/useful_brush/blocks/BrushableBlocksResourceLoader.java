@@ -1,4 +1,4 @@
-package to_binio.useful_brush;
+package to_binio.useful_brush.blocks;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -10,9 +10,9 @@ import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import org.jetbrains.annotations.Nullable;
+import to_binio.useful_brush.UsefulBrush;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
