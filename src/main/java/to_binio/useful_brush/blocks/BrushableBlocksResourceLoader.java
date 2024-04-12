@@ -41,9 +41,18 @@ public class BrushableBlocksResourceLoader implements SimpleSynchronousResourceR
 
                     for (Map.Entry<String, JsonElement> entry : data.asMap().entrySet()) {
                         Block from = stringToBlock(entry.getKey());
+
+                        if (from == null) {
+                            UsefulBrush.LOGGER.error("could not find block '{}'", entry.getKey());
+                            continue;
+                        }
+
                         BrushableBlockEntry blockEntry = parseEntry(entry.getValue());
 
-                        if (blockEntry == null || from == null) continue;
+                        if (blockEntry == null) {
+                            UsefulBrush.LOGGER.error("could parse data for '{}' - '{}'", entry.getKey(), entry.getValue());
+                            continue;
+                        }
 
                         var previous = UsefulBrush.BRUSHABLE_BLOCKS.put(from, blockEntry);
 
@@ -61,7 +70,7 @@ public class BrushableBlocksResourceLoader implements SimpleSynchronousResourceR
             }
         }
 
-        UsefulBrush.LOGGER.info("Loaded " + count + " brushable blocks");
+        UsefulBrush.LOGGER.info("Loaded {} brushable blocks", count);
     }
 
     @Nullable

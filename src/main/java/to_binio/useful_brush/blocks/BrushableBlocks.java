@@ -81,8 +81,6 @@ public class BrushableBlocks {
             LootContextParameterSet lootContextParameterSet = builder.build(LootContextTypes.BLOCK);
             lootTable.generateLoot(lootContextParameterSet, 0L, itemStack -> {
 
-                UsefulBrush.LOGGER.info(itemStack.getItem().getName().toString());
-
                 Vec3d pos = hitResult.getPos();
                 Vec3d center = blockPos.toCenterPos();
 
