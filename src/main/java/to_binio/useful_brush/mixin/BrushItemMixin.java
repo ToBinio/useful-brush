@@ -25,6 +25,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import to_binio.useful_brush.UsefulBrush;
+import to_binio.useful_brush.event.BrushBlockEvent;
 
 import static to_binio.useful_brush.blocks.BrushableBlocks.*;
 import static to_binio.useful_brush.entities.BrushableEntities.brushEntity;
@@ -113,7 +114,7 @@ public abstract class BrushItemMixin extends ItemMixin {
 
             BlockState blockState = user.getWorld().getBlockState(hitResult.getBlockPos());
 
-            if (UsefulBrush.BRUSHABLE_OUTLINE_BLOCKS.contains(blockState.getBlock())) {
+            if (UsefulBrush.BRUSHABLE_BLOCKS.containsKey(blockState.getBlock()) || BrushBlockEvent.hasListener(blockState.getBlock())) {
                 return hitResult;
             }
 

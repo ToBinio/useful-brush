@@ -38,6 +38,10 @@ public class BrushBlockEvent {
         return brushBlockEvent;
     }
 
+    public static boolean hasListener(Block block) {
+        return EVENTS.containsKey(block);
+    }
+
 
     @FunctionalInterface
     public interface BrushBlock {
