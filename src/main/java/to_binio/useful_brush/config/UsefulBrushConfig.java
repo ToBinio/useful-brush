@@ -18,8 +18,6 @@ public class UsefulBrushConfig {
         CHICKEN_DROP_COUNT = config.getOrDefault("drop.chicken", 2);
         MOOSHROOM_DROP_COUNT = config.getOrDefault("drop.mooshroom", 1);
 
-        UsefulBrush.LOGGER.warn(SHEEP_DROP_COUNT + "");
-
         BASE_BRUSH_COUNT = config.getOrDefault("brush.count", 15);
     }
 

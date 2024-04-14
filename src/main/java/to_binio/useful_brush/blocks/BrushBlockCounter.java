@@ -12,7 +12,6 @@ public class BrushBlockCounter {
     private final static Map<Integer, Entry> serverTimes = new HashMap<>();
 
     public static int decreaseCount(BlockPos pos, int playerID, int startCount, boolean isClient) {
-        UsefulBrush.LOGGER.info(isClient + " decrease");
         return decreaseCount(pos, playerID, startCount, isClient ? clientTimes : serverTimes);
     }
 
@@ -25,13 +24,11 @@ public class BrushBlockCounter {
         }
 
         times.put(playerID, new Entry(pos, count));
-        UsefulBrush.LOGGER.info(count + "");
 
         return count;
     }
 
     public static int get(BlockPos pos, int playerID, int defaultValue, boolean isClient) {
-        UsefulBrush.LOGGER.info(isClient + " get");
         return get(pos, playerID, defaultValue, isClient ? clientTimes : serverTimes);
     }
 
@@ -48,12 +45,10 @@ public class BrushBlockCounter {
             return defaultValue;
         }
 
-        UsefulBrush.LOGGER.info(entry.value + "");
         return entry.value;
     }
 
     public static boolean clear(int playerID, boolean isClient) {
-        UsefulBrush.LOGGER.info(isClient + " clear");
         return clear(playerID, isClient ? clientTimes : serverTimes);
     }
 
