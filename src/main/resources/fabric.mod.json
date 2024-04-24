@@ -42,6 +42,9 @@
       ],
       "net/minecraft/entity/passive/MooshroomEntity": [
         "to_binio/useful_brush/BrushCount"
+      ],
+      "net/minecraft/entity/passive/ArmadilloEntity": [
+        "to_binio/useful_brush/BrushCount"
       ]
     }
   }

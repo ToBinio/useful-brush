@@ -4,10 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.passive.ChickenEntity;
-import net.minecraft.entity.passive.MooshroomEntity;
-import net.minecraft.entity.passive.SheepEntity;
-import net.minecraft.entity.passive.WolfEntity;
+import net.minecraft.entity.passive.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.particle.BlockStateParticleEffect;
@@ -17,6 +14,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import to_binio.useful_brush.UsefulBrush;
 import to_binio.useful_brush.config.UsefulBrushConfig;
 import to_binio.useful_brush.event.BrushEntityEvent;
 import to_binio.useful_brush.mixin.entity.sheep.SheepAccessor;
@@ -35,7 +33,8 @@ public class BrushableEntityEvents {
             int particleCount = (int) (random.nextBetweenExclusive(2, 5) * (chicken.isBaby() ? 0.5 : 1));
 
             for (int k = 0; k < particleCount; ++k) {
-                world.addParticle(blockStateParticleEffect, brushLocation.x, brushLocation.y + chickenHeight, brushLocation.z, world.getRandom().nextDouble() - 0.5, world.getRandom().nextDouble(), world.getRandom().nextDouble() - .5);
+                world.addParticle(blockStateParticleEffect, brushLocation.x, brushLocation.y + chickenHeight, brushLocation.z, world.getRandom()
+                        .nextDouble() - 0.5, world.getRandom().nextDouble(), world.getRandom().nextDouble() - .5);
             }
 
             if (!shouldDrop(random, chicken.getBrushCount(), (int) (UsefulBrushConfig.INSTANCE.CHICKEN_DROP_COUNT * (chicken.isBaby() ? 0.5 : 1)))) {
@@ -43,7 +42,8 @@ public class BrushableEntityEvents {
             }
 
             chicken.dropStack(new ItemStack(Items.FEATHER.asItem()), (float) chickenHeight);
-            chicken.getWorld().playSound(playerEntity, chicken.getBlockPos(), SoundEvents.ITEM_BRUSH_BRUSHING_GENERIC, SoundCategory.BLOCKS);
+            chicken.getWorld()
+                    .playSound(playerEntity, chicken.getBlockPos(), SoundEvents.ITEM_BRUSH_BRUSHING_GENERIC, SoundCategory.BLOCKS);
 
             chicken.setBrushCount(chicken.getBrushCount() + 1);
 
@@ -62,7 +62,9 @@ public class BrushableEntityEvents {
             int particleCount = (int) (random.nextBetweenExclusive(7, 12) * (mooshroom.isBaby() ? 0.5 : 1));
 
             for (int k = 0; k < particleCount; ++k) {
-                world.addParticle(blockStateParticleEffect, brushLocation.x, brushLocation.y + mooshroomHeight, brushLocation.z, 3.0 * world.getRandom().nextDouble() - 1.5, 2.0 * world.getRandom().nextDouble(), 3.0 * world.getRandom().nextDouble() - 1.5);
+                world.addParticle(blockStateParticleEffect, brushLocation.x, brushLocation.y + mooshroomHeight, brushLocation.z, 3.0 * world.getRandom()
+                        .nextDouble() - 1.5, 2.0 * world.getRandom().nextDouble(), 3.0 * world.getRandom()
+                        .nextDouble() - 1.5);
             }
 
             if (!shouldDrop(random, mooshroom.getBrushCount(), (int) (UsefulBrushConfig.INSTANCE.MOOSHROOM_DROP_COUNT * (mooshroom.isBaby() ? 0.5 : 1)))) {
@@ -82,6 +84,36 @@ public class BrushableEntityEvents {
             return ActionResult.SUCCESS;
         });
 
+        BrushEntityEvent.getEvent(ArmadilloEntity.class).register((entity, playerEntity, brushLocation) -> {
+            ArmadilloEntity armadillo = (ArmadilloEntity) entity;
+            Random random = armadillo.getRandom();
+            World world = armadillo.getWorld();
+
+            var mooshroomHeight = armadillo.isBaby() ? 0.2 : 0.4;
+
+            BlockStateParticleEffect blockStateParticleEffect = new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.SAND.getDefaultState());
+
+            int particleCount = (int) (random.nextBetweenExclusive(4, 6) * (armadillo.isBaby() ? 0.5 : 1));
+
+            for (int k = 0; k < particleCount; ++k) {
+                world.addParticle(blockStateParticleEffect, brushLocation.x, brushLocation.y + mooshroomHeight, brushLocation.z, 3.0 * world.getRandom()
+                        .nextDouble() - 1.5, 2.0 * world.getRandom().nextDouble(), 3.0 * world.getRandom()
+                        .nextDouble() - 1.5);
+            }
+
+            if (!shouldDrop(random, armadillo.getBrushCount(), (int) (UsefulBrushConfig.INSTANCE.ARMADILLO_DROP_COUNT * (armadillo.isBaby() ? 0.5 : 1)))) {
+                return ActionResult.PASS;
+            }
+
+            armadillo.dropStack(new ItemStack(Items.ARMADILLO_SCUTE.asItem()), (float) mooshroomHeight);
+
+            world.playSound(playerEntity, armadillo.getBlockPos(), SoundEvents.ITEM_BRUSH_BRUSHING_GENERIC, SoundCategory.BLOCKS);
+
+            armadillo.setBrushCount(armadillo.getBrushCount() + 1);
+
+            return ActionResult.SUCCESS;
+        });
+
         BrushEntityEvent.getEvent(SheepEntity.class).register((entity, playerEntity, brushLocation) -> {
             SheepEntity sheep = (SheepEntity) entity;
             Random random = sheep.getRandom();
@@ -95,7 +127,9 @@ public class BrushableEntityEvents {
             int particleCount = (int) (random.nextBetweenExclusive(7, 12) * (sheep.isBaby() ? 0.3 : 1));
 
             for (int k = 0; k < particleCount; ++k) {
-                world.addParticle(blockStateParticleEffect, brushLocation.x, brushLocation.y + sheepHeight, brushLocation.z, 3.0 * world.getRandom().nextDouble() - 1.5, 2.0 * world.getRandom().nextDouble(), 3.0 * world.getRandom().nextDouble() - 1.5);
+                world.addParticle(blockStateParticleEffect, brushLocation.x, brushLocation.y + sheepHeight, brushLocation.z, 3.0 * world.getRandom()
+                        .nextDouble() - 1.5, 2.0 * world.getRandom().nextDouble(), 3.0 * world.getRandom()
+                        .nextDouble() - 1.5);
             }
 
             if (world.isClient()) return ActionResult.PASS;

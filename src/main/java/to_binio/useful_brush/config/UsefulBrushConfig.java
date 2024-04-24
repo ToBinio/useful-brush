@@ -8,6 +8,7 @@ public class UsefulBrushConfig {
     public final int SHEEP_DROP_COUNT;
     public final int CHICKEN_DROP_COUNT;
     public final int MOOSHROOM_DROP_COUNT;
+    public final int ARMADILLO_DROP_COUNT;
 
     public final int BASE_BRUSH_COUNT;
 
@@ -17,6 +18,7 @@ public class UsefulBrushConfig {
         SHEEP_DROP_COUNT = config.getOrDefault("drop.sheep", 3);
         CHICKEN_DROP_COUNT = config.getOrDefault("drop.chicken", 2);
         MOOSHROOM_DROP_COUNT = config.getOrDefault("drop.mooshroom", 1);
+        ARMADILLO_DROP_COUNT = config.getOrDefault("drop.armadillo", 4);
 
         BASE_BRUSH_COUNT = config.getOrDefault("brush.count", 15);
     }
@@ -32,6 +34,7 @@ public class UsefulBrushConfig {
                 # drop.sheep = 3
                 # drop.chicken = 2
                 # drop.mooshroom = 1
+                # drop.armadillo = 4
                                 
                 # How often you have to brush per count (percentage 15 = 7% chance to drop)
                 # brush.count = 15
