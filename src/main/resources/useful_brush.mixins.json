@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "to_binio.useful_brush.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
   "mixins": [
     "BrushItemMixin",
     "ItemMixin",

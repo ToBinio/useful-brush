@@ -11,6 +11,8 @@ import net.minecraft.loot.LootTable;
 import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.loot.context.LootContextTypes;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.hit.HitResult;
@@ -37,9 +39,7 @@ public class BrushableBlocks {
 
             if (brushResult == ActionResult.SUCCESS && !world.isClient()) {
                 EquipmentSlot equipmentSlot = stack.equals(playerEntity.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
-                stack.damage(1, playerEntity, ((userx) -> {
-                    userx.sendEquipmentBreakStatus(equipmentSlot);
-                }));
+                stack.damage(1, playerEntity, equipmentSlot);
             }
         }
     }
@@ -64,14 +64,14 @@ public class BrushableBlocks {
         }
 
         EquipmentSlot equipmentSlot = stack.equals(player.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
-        stack.damage(1, player, (userx) -> {
-            userx.sendEquipmentBreakStatus(equipmentSlot);
-        });
+        stack.damage(1, player, equipmentSlot);
 
         if (blockEntry.lootTable() == null)
             return;
 
-        var lootTable = world.getServer().getLootManager().getLootTable(blockEntry.lootTable());
+        var lootTable = world.getServer()
+                .getReloadableRegistries()
+                .getLootTable(RegistryKey.of(RegistryKeys.LOOT_TABLE, blockEntry.lootTable()));
 
         if (lootTable != LootTable.EMPTY) {
             LootContextParameterSet.Builder builder = (new LootContextParameterSet.Builder((ServerWorld) world)).add(LootContextParameters.ORIGIN, blockPos.toCenterPos())

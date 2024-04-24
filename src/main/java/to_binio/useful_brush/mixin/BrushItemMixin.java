@@ -86,7 +86,7 @@ public abstract class BrushItemMixin extends ItemMixin {
     private void myGetHitResult(PlayerEntity user, CallbackInfoReturnable<HitResult> cir) {
         HitResult hitResult = getSpecialBlockHitResult(user);
         if (hitResult.getType() != HitResult.Type.MISS) {
-            Vec3d velocity = user.getRotationVec(0.0F).multiply(PlayerEntity.getReachDistance(user.isCreative()));
+            Vec3d velocity = user.getRotationVec(0.0F).multiply(user.getBlockInteractionRange());
             World world = user.getWorld();
             Vec3d from = user.getEyePos();
             Vec3d to = hitResult.getPos();
@@ -103,7 +103,7 @@ public abstract class BrushItemMixin extends ItemMixin {
 
     @Unique
     private static BlockHitResult getSpecialBlockHitResult(PlayerEntity user) {
-        Vec3d velocity = user.getRotationVec(0.0F).multiply(PlayerEntity.getReachDistance(user.isCreative()));
+        Vec3d velocity = user.getRotationVec(0.0F).multiply(user.getBlockInteractionRange());
         World world = user.getWorld();
         Vec3d from = user.getEyePos();
         Vec3d to = from.add(velocity);

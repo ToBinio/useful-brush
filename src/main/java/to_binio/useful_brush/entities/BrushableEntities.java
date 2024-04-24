@@ -38,9 +38,7 @@ public class BrushableEntities {
 
                     if (brushResult == ActionResult.SUCCESS && !world.isClient()) {
                         EquipmentSlot equipmentSlot = stack.equals(playerEntity.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
-                        stack.damage(1, user, ((userx) -> {
-                            userx.sendEquipmentBreakStatus(equipmentSlot);
-                        }));
+                        stack.damage(1, user, equipmentSlot);
                     }
 
                     if (brushResult == ActionResult.PASS) {
