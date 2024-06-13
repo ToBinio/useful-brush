@@ -11,6 +11,7 @@ a fabric mod which adds more functionalities to the brush
 * brush chickens to drop feathers
 * brush sheep to drop strings
 * brush mooshrooms to drop mushrooms
+* improve vanilla Armadillo brushing - don't just click it really brush the Armadillo
 * pat you dog
 * brush a campfire to make it burn better, thus let you cook food faster
 
