@@ -4,6 +4,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.block.Block;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import to_binio.useful_brush.blocks.BrushableBlockEntry;
@@ -35,4 +36,9 @@ public class UsefulBrush implements ModInitializer {
         BrushableEntityEvents.register();
         BrushableBlockEvents.register();
     }
+
+    public static Identifier id(String path) {
+        return Identifier.of(MOD_ID, path);
+    }
+
 }

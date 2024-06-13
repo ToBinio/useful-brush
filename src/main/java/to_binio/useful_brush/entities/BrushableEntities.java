@@ -25,7 +25,7 @@ public class BrushableEntities {
         if (hitResult instanceof EntityHitResult entityHitResult) {
             if (hitResult.getType() == HitResult.Type.ENTITY) {
 
-                int i = item.getMaxUseTime(stack) - remainingUseTicks + 1;
+                int i = item.getMaxUseTime(stack, user) - remainingUseTicks + 1;
                 boolean bl = i % 10 == 5;
                 if (bl) {
                     clearBlockBreakingInfo(world, user);

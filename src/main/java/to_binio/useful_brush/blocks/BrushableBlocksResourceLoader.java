@@ -16,11 +16,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import static to_binio.useful_brush.UsefulBrush.id;
+
 public class BrushableBlocksResourceLoader implements SimpleSynchronousResourceReloadListener {
 
     @Override
     public Identifier getFabricId() {
-        return new Identifier(UsefulBrush.MOD_ID, "brushable_blocks");
+        return id("brushable_blocks");
     }
 
     @Override
