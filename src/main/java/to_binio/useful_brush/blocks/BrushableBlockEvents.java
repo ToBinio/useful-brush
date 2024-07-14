@@ -3,6 +3,7 @@ package to_binio.useful_brush.blocks;
 import net.minecraft.block.*;
 import net.minecraft.util.ActionResult;
 import net.minecraft.world.World;
+import to_binio.useful_brush.BrushCounter;
 import to_binio.useful_brush.event.BrushBlockEvent;
 import to_binio.useful_brush.mixin.blockEntity.CampfireBlockEntityAccessor;
 
@@ -34,6 +35,10 @@ public class BrushableBlockEvents {
 
         BrushBlockEvent.getEvent(Blocks.SNOW).register((playerEntity, blockPos) -> {
             World world = playerEntity.getWorld();
+
+            if (BrushCounter.get(playerEntity.getId(), world.isClient()) < 5) {
+                return ActionResult.PASS;
+            }
 
             if (world.isClient()) {
                 return ActionResult.SUCCESS;

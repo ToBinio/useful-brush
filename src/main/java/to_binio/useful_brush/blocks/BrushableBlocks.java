@@ -4,7 +4,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootTable;
@@ -19,40 +18,40 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import to_binio.useful_brush.BrushCounter;
 import to_binio.useful_brush.UsefulBrush;
 import to_binio.useful_brush.event.BrushBlockEvent;
 
+import static to_binio.useful_brush.BrushUtil.handleBrushEvent;
+
 public class BrushableBlocks {
 
-    public static void brushBlock(World world, ItemStack stack, PlayerEntity playerEntity,
+    public static void brush(World world, ItemStack stack, PlayerEntity playerEntity,
             HitResult hitResult, BlockPos blockPos, BlockState blockState) {
         var brushableBlock = UsefulBrush.BRUSHABLE_BLOCKS.get(blockState.getBlock());
 
-        if (brushableBlock != null) {
-            brushBrushableBlock(world, stack, playerEntity, hitResult, blockPos, brushableBlock, blockState);
-        } else {
-            clearBlockBreakingInfo(world, playerEntity);
+        BrushCounter.brushBlock(blockPos, playerEntity.getId(), world);
 
+        if (brushableBlock != null) {
+            brushBrushable(world, stack, playerEntity, hitResult, blockPos, brushableBlock, blockState);
+        } else {
             ActionResult brushResult = BrushBlockEvent.getEvent(blockState.getBlock())
                     .invoker()
                     .brush(playerEntity, blockPos);
 
-            if (brushResult == ActionResult.SUCCESS && !world.isClient()) {
-                EquipmentSlot equipmentSlot = stack.equals(playerEntity.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
-                stack.damage(1, playerEntity, equipmentSlot);
-            }
+            handleBrushEvent(world, stack, playerEntity, brushResult);
         }
     }
 
-    public static void brushBrushableBlock(World world, ItemStack stack, PlayerEntity player,
+    private static void brushBrushable(World world, ItemStack stack, PlayerEntity player,
             HitResult hitResult, BlockPos blockPos, BrushableBlockEntry blockEntry, BlockState blockState) {
 
-        world.setBlockBreakingInfo(player.getId(), blockPos, Math.round(((float) (blockEntry.brushCount() - BrushBlockCounter.get(blockPos, player.getId(), blockEntry.brushCount(), world.isClient())) / blockEntry.brushCount()) * 10));
+        world.setBlockBreakingInfo(player.getId(), blockPos, Math.round(((float) BrushCounter.get(player.getId(), world.isClient()) / blockEntry.brushCount()) * 10));
 
-        if (BrushBlockCounter.decreaseCount(blockPos, player.getId(), blockEntry.brushCount(), world.isClient()) != 0)
+        if (BrushCounter.get(player.getId(), world.isClient) < blockEntry.brushCount())
             return;
 
-        clearBlockBreakingInfo(world, player);
+        BrushCounter.clear(player.getId(), world);
 
         if (world.isClient())
             return;
@@ -97,12 +96,7 @@ public class BrushableBlocks {
         }
     }
 
-    public static void clearBlockBreakingInfo(World world, LivingEntity user) {
-        if (user instanceof PlayerEntity player) {
-
-            if (BrushBlockCounter.clear(player.getId(), world.isClient())) {
-                world.setBlockBreakingInfo(user.getId(), BlockPos.ORIGIN, -1);
-            }
-        }
+    public static void clear(int playerID, World world) {
+        world.setBlockBreakingInfo(playerID, BlockPos.ORIGIN, -1);
     }
 }
