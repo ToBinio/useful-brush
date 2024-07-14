@@ -13,7 +13,6 @@ import org.jetbrains.annotations.Nullable;
 import to_binio.useful_brush.UsefulBrush;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 import static to_binio.useful_brush.UsefulBrush.id;
@@ -27,7 +26,7 @@ public class BrushableBlocksResourceLoader implements SimpleSynchronousResourceR
 
     @Override
     public void reload(ResourceManager manager) {
-        UsefulBrush.BRUSHABLE_BLOCKS.clear();
+        UsefulBrush.BASIC_BRUSHABLE_BLOCKS.clear();
 
         Map<Identifier, Resource> brushable = manager.findResources("brushables", identifier -> identifier.getPath()
                 .endsWith(".json"));
@@ -54,7 +53,7 @@ public class BrushableBlocksResourceLoader implements SimpleSynchronousResourceR
                         continue;
                     }
 
-                    var previous = UsefulBrush.BRUSHABLE_BLOCKS.put(from, blockEntry);
+                    var previous = UsefulBrush.BASIC_BRUSHABLE_BLOCKS.put(from, blockEntry);
 
                     if (previous != null) {
                         UsefulBrush.LOGGER.warn("%s -> %s got overwritten with %s".formatted(from, previous.block()
