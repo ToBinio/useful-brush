@@ -36,10 +36,6 @@ public class BrushableBlockEvents {
         BrushBlockEvent.getEvent(Blocks.SNOW).register((playerEntity, blockPos) -> {
             World world = playerEntity.getWorld();
 
-            if (BrushCounter.get(playerEntity.getId(), world.isClient()) < 5) {
-                return ActionResult.PASS;
-            }
-
             if (world.isClient()) {
                 return ActionResult.SUCCESS;
             }
