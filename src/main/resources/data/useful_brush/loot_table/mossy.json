@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:slime_ball"
+          "name": "minecraft:moss_block"
         }
       ],
       "conditions": [
