@@ -8,9 +8,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.BrushItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -24,11 +26,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import to_binio.useful_brush.BrushCounter;
 import to_binio.useful_brush.UsefulBrush;
+import to_binio.useful_brush.blocks.BrushableBlocks;
 import to_binio.useful_brush.event.BrushBlockEvent;
 
-import static to_binio.useful_brush.blocks.BrushableBlocks.*;
-import static to_binio.useful_brush.entities.BrushableEntities.brushEntity;
+import static to_binio.useful_brush.entities.BrushableEntities.brush;
 
 @Mixin (BrushItem.class)
 public abstract class BrushItemMixin extends ItemMixin {
@@ -42,30 +45,43 @@ public abstract class BrushItemMixin extends ItemMixin {
             @Local BlockPos blockPos) {
         BlockState blockState = world.getBlockState(blockPos);
 
-        brushBlock(world, stack, playerEntity, hitResult, blockPos, blockState);
+        BrushableBlocks.brush(world, stack, playerEntity, hitResult, blockPos, blockState);
     }
 
     @Inject (at = @At (shift = At.Shift.AFTER, value = "INVOKE_ASSIGN", target = "Lnet/minecraft/item/BrushItem;getHitResult(Lnet/minecraft/entity/player/PlayerEntity;)Lnet/minecraft/util/hit/HitResult;"), method = "usageTick", cancellable = true)
     private void usageTickEntity(World world, LivingEntity user, ItemStack stack, int remainingUseTicks,
             CallbackInfo ci, @Local (ordinal = 0) PlayerEntity playerEntity, @Local (ordinal = 0) HitResult hitResult) {
 
-        brushEntity(world, user, stack, remainingUseTicks, ci, playerEntity, hitResult, (BrushItem) (Object) this);
+        BrushItem brushItem = (BrushItem) (Object) this;
+
+        if (hitResult instanceof EntityHitResult entityHitResult) {
+            if (hitResult.getType() == HitResult.Type.ENTITY) {
+
+                int i = brushItem.getMaxUseTime(stack, playerEntity) - remainingUseTicks + 1;
+                boolean bl = i % 10 == 5;
+                if (bl) {
+                    brush(world, stack, playerEntity, entityHitResult);
+                }
+
+                ci.cancel();
+            }
+        }
     }
 
 
     @Override
     protected void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks,
             CallbackInfo ci) {
-        clearBlockBreakingInfo(world, user);
+        BrushCounter.clear(user.getId(), world);
     }
 
     @Override
     protected void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected,
             CallbackInfo ci) {
 
-        if (!selected) {
-            if (entity instanceof LivingEntity livingEntity) {
-                clearBlockBreakingInfo(world, livingEntity);
+        if (entity instanceof LivingEntity player) {
+            if (!player.getStackInHand(player.getActiveHand()).isOf(Items.BRUSH)) {
+                BrushCounter.clear(player.getId(), world);
             }
         }
     }
@@ -114,7 +130,7 @@ public abstract class BrushItemMixin extends ItemMixin {
 
             BlockState blockState = user.getWorld().getBlockState(hitResult.getBlockPos());
 
-            if (UsefulBrush.BRUSHABLE_BLOCKS.containsKey(blockState.getBlock()) || BrushBlockEvent.hasListener(blockState.getBlock())) {
+            if (UsefulBrush.BASIC_BRUSHABLE_BLOCKS.containsKey(blockState.getBlock()) || BrushBlockEvent.hasListener(blockState.getBlock())) {
                 return hitResult;
             }
 

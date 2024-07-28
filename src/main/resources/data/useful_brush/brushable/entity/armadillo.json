@@ -1,0 +1,9 @@
+{
+  "id": "minecraft:armadillo",
+  "particle_block": "minecraft:sand",
+  "min_particle_count": 4,
+  "max_particle_count": 6,
+  "height": 0.4,
+  "baby_height": 0.2,
+  "loot_table": "useful_brush:armadillo"
+}

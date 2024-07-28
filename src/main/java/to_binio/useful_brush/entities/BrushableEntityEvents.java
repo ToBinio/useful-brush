@@ -5,115 +5,21 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.passive.*;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
-import to_binio.useful_brush.UsefulBrush;
-import to_binio.useful_brush.config.UsefulBrushConfig;
 import to_binio.useful_brush.event.BrushEntityEvent;
 import to_binio.useful_brush.mixin.entity.sheep.SheepAccessor;
+
+import static to_binio.useful_brush.UsefulBrush.id;
+import static to_binio.useful_brush.entities.BrushableEntities.dropFromLootTable;
 
 public class BrushableEntityEvents {
 
     public static void register() {
-        BrushEntityEvent.getEvent(ChickenEntity.class).register((entity, playerEntity, brushLocation) -> {
-            ChickenEntity chicken = (ChickenEntity) entity;
-            Random random = chicken.getRandom();
-            World world = chicken.getWorld();
-
-            BlockStateParticleEffect blockStateParticleEffect = new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.CALCITE.getDefaultState());
-
-            var chickenHeight = chicken.isBaby() ? 0.1 : 0.3;
-            int particleCount = (int) (random.nextBetweenExclusive(2, 5) * (chicken.isBaby() ? 0.5 : 1));
-
-            for (int k = 0; k < particleCount; ++k) {
-                world.addParticle(blockStateParticleEffect, brushLocation.x, brushLocation.y + chickenHeight, brushLocation.z, world.getRandom()
-                        .nextDouble() - 0.5, world.getRandom().nextDouble(), world.getRandom().nextDouble() - .5);
-            }
-
-            if (!shouldDrop(random, chicken.getBrushCount(), (int) (UsefulBrushConfig.INSTANCE.CHICKEN_DROP_COUNT * (chicken.isBaby() ? 0.5 : 1)))) {
-                return ActionResult.PASS;
-            }
-
-            chicken.dropStack(new ItemStack(Items.FEATHER.asItem()), (float) chickenHeight);
-            chicken.getWorld()
-                    .playSound(playerEntity, chicken.getBlockPos(), SoundEvents.ITEM_BRUSH_BRUSHING_GENERIC, SoundCategory.BLOCKS);
-
-            chicken.setBrushCount(chicken.getBrushCount() + 1);
-
-            return ActionResult.SUCCESS;
-        });
-
-        BrushEntityEvent.getEvent(MooshroomEntity.class).register((entity, playerEntity, brushLocation) -> {
-            MooshroomEntity mooshroom = (MooshroomEntity) entity;
-            Random random = mooshroom.getRandom();
-            World world = mooshroom.getWorld();
-
-            var mooshroomHeight = mooshroom.isBaby() ? 0.3 : 0.8;
-
-            BlockStateParticleEffect blockStateParticleEffect = new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.RED_MUSHROOM_BLOCK.getDefaultState());
-
-            int particleCount = (int) (random.nextBetweenExclusive(7, 12) * (mooshroom.isBaby() ? 0.5 : 1));
-
-            for (int k = 0; k < particleCount; ++k) {
-                world.addParticle(blockStateParticleEffect, brushLocation.x, brushLocation.y + mooshroomHeight, brushLocation.z, 3.0 * world.getRandom()
-                        .nextDouble() - 1.5, 2.0 * world.getRandom().nextDouble(), 3.0 * world.getRandom()
-                        .nextDouble() - 1.5);
-            }
-
-            if (!shouldDrop(random, mooshroom.getBrushCount(), (int) (UsefulBrushConfig.INSTANCE.MOOSHROOM_DROP_COUNT * (mooshroom.isBaby() ? 0.5 : 1)))) {
-                return ActionResult.PASS;
-            }
-
-            if (random.nextBetween(0, 5) == 0) {
-                mooshroom.dropStack(new ItemStack(Items.BROWN_MUSHROOM.asItem()), (float) mooshroomHeight);
-            } else {
-                mooshroom.dropStack(new ItemStack(Items.RED_MUSHROOM.asItem()), (float) mooshroomHeight);
-            }
-
-            world.playSound(playerEntity, mooshroom.getBlockPos(), SoundEvents.ITEM_BRUSH_BRUSHING_GENERIC, SoundCategory.BLOCKS);
-
-            mooshroom.setBrushCount(mooshroom.getBrushCount() + 1);
-
-            return ActionResult.SUCCESS;
-        });
-
-        BrushEntityEvent.getEvent(ArmadilloEntity.class).register((entity, playerEntity, brushLocation) -> {
-            ArmadilloEntity armadillo = (ArmadilloEntity) entity;
-            Random random = armadillo.getRandom();
-            World world = armadillo.getWorld();
-
-            var mooshroomHeight = armadillo.isBaby() ? 0.2 : 0.4;
-
-            BlockStateParticleEffect blockStateParticleEffect = new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.SAND.getDefaultState());
-
-            int particleCount = (int) (random.nextBetweenExclusive(4, 6) * (armadillo.isBaby() ? 0.5 : 1));
-
-            for (int k = 0; k < particleCount; ++k) {
-                world.addParticle(blockStateParticleEffect, brushLocation.x, brushLocation.y + mooshroomHeight, brushLocation.z, 3.0 * world.getRandom()
-                        .nextDouble() - 1.5, 2.0 * world.getRandom().nextDouble(), 3.0 * world.getRandom()
-                        .nextDouble() - 1.5);
-            }
-
-            if (!shouldDrop(random, armadillo.getBrushCount(), (int) (UsefulBrushConfig.INSTANCE.ARMADILLO_DROP_COUNT * (armadillo.isBaby() ? 0.5 : 1)))) {
-                return ActionResult.PASS;
-            }
-
-            armadillo.dropStack(new ItemStack(Items.ARMADILLO_SCUTE.asItem()), (float) mooshroomHeight);
-
-            world.playSound(playerEntity, armadillo.getBlockPos(), SoundEvents.ITEM_BRUSH_BRUSHING_GENERIC, SoundCategory.BLOCKS);
-
-            armadillo.setBrushCount(armadillo.getBrushCount() + 1);
-
-            return ActionResult.SUCCESS;
-        });
-
         BrushEntityEvent.getEvent(SheepEntity.class).register((entity, playerEntity, brushLocation) -> {
             SheepEntity sheep = (SheepEntity) entity;
             Random random = sheep.getRandom();
@@ -123,28 +29,39 @@ public class BrushableEntityEvents {
 
             BlockStateParticleEffect blockStateParticleEffect = new BlockStateParticleEffect(ParticleTypes.BLOCK, wool.getDefaultState());
 
-            var sheepHeight = sheep.isBaby() ? 0.3 : 0.8;
-            int particleCount = (int) (random.nextBetweenExclusive(7, 12) * (sheep.isBaby() ? 0.3 : 1));
+            var sheepHeight = sheep.isBaby() ? 0.3f : 0.8f;
+            summonFullSizeAnimalParticles(random, sheep.isBaby(), world, blockStateParticleEffect, brushLocation, sheepHeight);
 
-            for (int k = 0; k < particleCount; ++k) {
-                world.addParticle(blockStateParticleEffect, brushLocation.x, brushLocation.y + sheepHeight, brushLocation.z, 3.0 * world.getRandom()
-                        .nextDouble() - 1.5, 2.0 * world.getRandom().nextDouble(), 3.0 * world.getRandom()
-                        .nextDouble() - 1.5);
+            if (world.isClient()) {
+                return ActionResult.SUCCESS;
             }
 
-            if (world.isClient()) return ActionResult.PASS;
-
-            if (!shouldDrop(random, sheep.getBrushCount(), (int) (UsefulBrushConfig.INSTANCE.SHEEP_DROP_COUNT * (sheep.isBaby() ? 0.5 : 1)))) {
-                return ActionResult.PASS;
-            }
-
-            sheep.dropStack(new ItemStack(Items.STRING.asItem()), (float) sheepHeight);
-            world.playSound(playerEntity, sheep.getBlockPos(), SoundEvents.ITEM_BRUSH_BRUSHING_GENERIC, SoundCategory.BLOCKS);
-
-            sheep.setBrushCount(sheep.getBrushCount() + 1);
+            dropFromLootTable(world, playerEntity, entity, sheepHeight, id("sheep"));
 
             return ActionResult.SUCCESS;
         });
+
+        BrushEntityEvent.getEvent(MooshroomEntity.class).register((entity, playerEntity, brushLocation) -> {
+            MooshroomEntity mooshroom = (MooshroomEntity) entity;
+            Random random = mooshroom.getRandom();
+            World world = mooshroom.getWorld();
+
+            var particleBlock = mooshroom.getVariant() == MooshroomEntity.Type.BROWN ? Blocks.BROWN_MUSHROOM_BLOCK.getDefaultState() : Blocks.RED_MUSHROOM_BLOCK.getDefaultState();
+
+            BlockStateParticleEffect blockStateParticleEffect = new BlockStateParticleEffect(ParticleTypes.BLOCK, particleBlock);
+
+            var mooshroomHeight = mooshroom.isBaby() ? 0.3f : 0.8f;
+            summonFullSizeAnimalParticles(random, mooshroom.isBaby(), world, blockStateParticleEffect, brushLocation, mooshroomHeight);
+
+            if (world.isClient()) {
+                return ActionResult.SUCCESS;
+            }
+
+            dropFromLootTable(world, playerEntity, entity, mooshroomHeight, id("mooshroom"));
+
+            return ActionResult.SUCCESS;
+        });
+
 
         BrushEntityEvent.getEvent(WolfEntity.class).register((entity, playerEntity, brushLocation) -> {
 
@@ -180,7 +97,14 @@ public class BrushableEntityEvents {
         });
     }
 
-    public static boolean shouldDrop(Random random, int brushCount, int goalAmount) {
-        return random.nextBetween(0, (int) (UsefulBrushConfig.INSTANCE.BASE_BRUSH_COUNT / Math.pow((double) (Math.max(goalAmount, 1)) / (brushCount + 1), 2))) == 0;
+    private static void summonFullSizeAnimalParticles(Random random, boolean baby, World world,
+            BlockStateParticleEffect blockStateParticleEffect, Vec3d brushLocation, float sheepHeight) {
+        int particleCount = (int) (random.nextBetweenExclusive(7, 12) * (baby ? 0.3 : 1));
+
+        for (int k = 0; k < particleCount; ++k) {
+            world.addParticle(blockStateParticleEffect, brushLocation.x, brushLocation.y + sheepHeight, brushLocation.z, 3.0 * world.getRandom()
+                    .nextDouble() - 1.5, 2.0 * world.getRandom().nextDouble(), 3.0 * world.getRandom()
+                    .nextDouble() - 1.5);
+        }
     }
 }

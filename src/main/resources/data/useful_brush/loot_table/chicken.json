@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:moss_block"
+          "name": "minecraft:feather"
         }
       ],
       "conditions": [

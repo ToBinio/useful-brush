@@ -8,16 +8,8 @@
     "ItemMixin",
     "blockEntity.CampfireBlockEntityAccessor",
     "entity.LivingEntityMixin",
-    "entity.armadillo.ArmadilloBrushCountMixin",
     "entity.armadillo.ArmadilloMixin",
-    "entity.chicken.ChickenBrushCountMixin",
-    "entity.chicken.ChickenMixin",
-    "entity.mooshroom.MooshroomAccessor",
-    "entity.mooshroom.MooshroomBrushCountMixin",
-    "entity.mooshroom.MooshroomMixin",
     "entity.sheep.SheepAccessor",
-    "entity.sheep.SheepBrushCountMixin",
-    "entity.sheep.SheepMixin",
     "entity.wolf.WolfMixin"
   ],
   "client": [

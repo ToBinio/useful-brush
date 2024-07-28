@@ -72,9 +72,16 @@ modrinth {
     token = System.getenv("MODRINTH_TOKEN")
     projectId = "uY1F4Eo5"
     uploadFile = remapJar
-    gameVersions = ["1.20.5"]
+    gameVersions = ["1.21.0"]
     loaders = ["fabric"]
-    changelog = "improve vanilla Armadillo brushing"
+    changelog = """
+* ### Breaking - move `brushables` to `brushable/block` see (README)[https://github.com/ToBinio/useful-brush?tab=readme-ov-file#add-brushables] for more info
+* simply how brushing behavier of entities - drops are now simply handled via loottables
+* make mossy blocks drop mossblock instead of slime
+* parrots now drop feathers
+* turtles now drop turtle scutes
+* brown mooshrooms drop brown mushrooms
+"""
     dependencies {
         required.project "fabric-api"
     }

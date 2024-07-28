@@ -1,0 +1,9 @@
+{
+  "id": "minecraft:chicken",
+  "particle_block": "minecraft:calcite",
+  "min_particle_count": 2,
+  "max_particle_count": 5,
+  "height": 0.3,
+  "baby_height": 0.1,
+  "loot_table": "useful_brush:chicken"
+}
