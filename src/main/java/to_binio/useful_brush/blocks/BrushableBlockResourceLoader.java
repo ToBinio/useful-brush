@@ -13,12 +13,17 @@ import org.jetbrains.annotations.Nullable;
 import to_binio.useful_brush.UsefulBrush;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import static to_binio.useful_brush.UsefulBrush.id;
 
-public class BrushableBlocksResourceLoader implements SimpleSynchronousResourceReloadListener {
-
+/**
+ * Created: 28.07.24
+ *
+ * @author Tobias Frischmann
+ */
+public class BrushableBlockResourceLoader implements SimpleSynchronousResourceReloadListener {
     @Override
     public Identifier getFabricId() {
         return id("brushable_blocks");
@@ -28,45 +33,47 @@ public class BrushableBlocksResourceLoader implements SimpleSynchronousResourceR
     public void reload(ResourceManager manager) {
         UsefulBrush.BASIC_BRUSHABLE_BLOCKS.clear();
 
-        Map<Identifier, Resource> brushable = manager.findResources("brushables", identifier -> identifier.getPath()
+        var brushable = manager.findAllResources("brushable/block", identifier -> identifier.getPath()
                 .endsWith(".json"));
 
         var count = 0;
 
-        for (Map.Entry<Identifier, Resource> resource : brushable.entrySet()) {
-            try (var input = resource.getValue().getInputStream()) {
-                String fileContent = new String(input.readAllBytes());
-                JsonObject data = JsonHelper.deserialize(fileContent);
+        for (Map.Entry<Identifier, List<Resource>> resourceEntry : brushable.entrySet()) {
+            for (Resource resource : resourceEntry.getValue()) {
+                try (var input = resource.getInputStream()) {
+                    String fileContent = new String(input.readAllBytes());
+                    JsonObject data = JsonHelper.deserialize(fileContent);
 
-                for (Map.Entry<String, JsonElement> entry : data.asMap().entrySet()) {
-                    Block from = stringToBlock(entry.getKey());
+                    for (Map.Entry<String, JsonElement> entry : data.asMap().entrySet()) {
+                        Block from = stringToBlock(entry.getKey());
 
-                    if (from == null) {
-                        UsefulBrush.LOGGER.error("could not find block '{}'", entry.getKey());
-                        continue;
+                        if (from == null) {
+                            UsefulBrush.LOGGER.error("could not find block '{}'", entry.getKey());
+                            continue;
+                        }
+
+                        BrushableBlockEntry blockEntry = parseEntry(entry.getValue());
+
+                        if (blockEntry == null) {
+                            UsefulBrush.LOGGER.error("could parse data for '{}' - '{}'", entry.getKey(), entry.getValue());
+                            continue;
+                        }
+
+                        var previous = UsefulBrush.BASIC_BRUSHABLE_BLOCKS.put(from, blockEntry);
+
+                        if (previous != null) {
+                            UsefulBrush.LOGGER.warn("%s -> %s got overwritten with %s".formatted(from, previous.block()
+                                    .toString(), blockEntry.block().toString()));
+                        } else {
+                            count++;
+                        }
                     }
 
-                    BrushableBlockEntry blockEntry = parseEntry(entry.getValue());
-
-                    if (blockEntry == null) {
-                        UsefulBrush.LOGGER.error("could parse data for '{}' - '{}'", entry.getKey(), entry.getValue());
-                        continue;
-                    }
-
-                    var previous = UsefulBrush.BASIC_BRUSHABLE_BLOCKS.put(from, blockEntry);
-
-                    if (previous != null) {
-                        UsefulBrush.LOGGER.warn("%s -> %s got overwritten with %s".formatted(from, previous.block()
-                                .toString(), blockEntry.block().toString()));
-                    } else {
-                        count++;
-                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
-
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+                UsefulBrush.LOGGER.info("Parsed brushable blocks in {}", resourceEntry.getKey());
             }
-            UsefulBrush.LOGGER.info("Parsed brushable blocks in {}", resource.getKey());
         }
 
         UsefulBrush.LOGGER.info("Loaded {} brushable blocks", count);

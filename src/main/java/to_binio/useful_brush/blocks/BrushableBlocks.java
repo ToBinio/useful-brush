@@ -65,7 +65,7 @@ public class BrushableBlocks {
         EquipmentSlot equipmentSlot = stack.equals(player.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
         stack.damage(1, player, equipmentSlot);
 
-        if (blockEntry.lootTable() == null)
+        if (blockEntry.lootTable() == null || world.getServer() == null)
             return;
 
         var lootTable = world.getServer()
@@ -73,9 +73,11 @@ public class BrushableBlocks {
                 .getLootTable(RegistryKey.of(RegistryKeys.LOOT_TABLE, blockEntry.lootTable()));
 
         if (lootTable != LootTable.EMPTY) {
-            LootContextParameterSet.Builder builder = (new LootContextParameterSet.Builder((ServerWorld) world)).add(LootContextParameters.ORIGIN, blockPos.toCenterPos())
-                    .add(LootContextParameters.TOOL, ItemStack.EMPTY)
-                    .add(LootContextParameters.BLOCK_STATE, blockState);
+            LootContextParameterSet.Builder builder = (new LootContextParameterSet.Builder((ServerWorld) world))
+                    .add(LootContextParameters.ORIGIN, blockPos.toCenterPos())
+                    .add(LootContextParameters.TOOL, stack)
+                    .add(LootContextParameters.BLOCK_STATE, blockState)
+                    .add(LootContextParameters.THIS_ENTITY, player);
 
             LootContextParameterSet lootContextParameterSet = builder.build(LootContextTypes.BLOCK);
             lootTable.generateLoot(lootContextParameterSet, 0L, itemStack -> {

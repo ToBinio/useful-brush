@@ -4,16 +4,24 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootTable;
+import net.minecraft.loot.context.LootContextParameterSet;
+import net.minecraft.loot.context.LootContextParameters;
+import net.minecraft.loot.context.LootContextTypes;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import to_binio.useful_brush.BrushCounter;
 import to_binio.useful_brush.UsefulBrush;
-import to_binio.useful_brush.config.UsefulBrushConfig;
 import to_binio.useful_brush.event.BrushEntityEvent;
 
 import static to_binio.useful_brush.BrushUtil.handleBrushEvent;
@@ -28,7 +36,7 @@ public class BrushableEntities {
         ActionResult result;
 
         if (brushableEntityEntry != null) {
-            result = brushBrushable(world, playerEntity, entity, brushableEntityEntry, hitResult.getPos());
+            result = brushBrushable(world, playerEntity, stack, entity, brushableEntityEntry, hitResult.getPos());
         } else {
             result = BrushEntityEvent.getEvent(entity.getClass())
                     .invoker()
@@ -42,7 +50,7 @@ public class BrushableEntities {
         }
     }
 
-    private static ActionResult brushBrushable(World world, PlayerEntity playerEntity, Entity entity,
+    private static ActionResult brushBrushable(World world, PlayerEntity playerEntity, ItemStack stack, Entity entity,
             BrushableEntityEntry brushableEntityEntry, Vec3d brushLocation) {
 
         Random random = entity.getRandom();
@@ -56,8 +64,7 @@ public class BrushableEntities {
         }
 
         var height = isBaby ? brushableEntityEntry.babyHeight() : brushableEntityEntry.height();
-        int particleCount = (int) (random.nextBetweenExclusive(brushableEntityEntry.minParticleCount(), brushableEntityEntry.maxParticleCount())
-                * (isBaby ? 0.5 : 1));
+        int particleCount = (int) (random.nextBetweenExclusive(brushableEntityEntry.minParticleCount(), brushableEntityEntry.maxParticleCount()) * (isBaby ? 0.5 : 1));
 
         for (int k = 0; k < particleCount; ++k) {
             world.addParticle(brushableEntityEntry.particleEffect(), brushLocation.x, brushLocation.y + height, brushLocation.z, world.getRandom()
@@ -68,18 +75,36 @@ public class BrushableEntities {
             return ActionResult.SUCCESS;
         }
 
-        if (!shouldDrop(random, BrushCounter.get(playerEntity.getId(), world.isClient()), (int) (UsefulBrushConfig.INSTANCE.CHICKEN_DROP_COUNT * (isBaby ? 2 : 1)))) {
-            return ActionResult.PASS;
-        }
-
-        entity.dropStack(new ItemStack(brushableEntityEntry.drop().apply(entity).asItem()), height);
-        entity.getWorld()
-                .playSound(playerEntity, entity.getBlockPos(), SoundEvents.ITEM_BRUSH_BRUSHING_GENERIC, SoundCategory.BLOCKS);
+        dropFromLootTable(world, playerEntity, entity, height, brushableEntityEntry.lootTable());
 
         return ActionResult.SUCCESS;
     }
 
-    public static boolean shouldDrop(Random random, int brushCount, int goalAmount) {
-        return random.nextBetween(0, Math.max(goalAmount - brushCount, 0) + 1) == 0;
+    public static void dropFromLootTable(World world, PlayerEntity playerEntity, Entity entity, float height,
+            Identifier lootTableId) {
+        if (world.getServer() == null) {
+            return;
+        }
+
+        var lootTable = world.getServer()
+                .getReloadableRegistries()
+                .getLootTable(RegistryKey.of(RegistryKeys.LOOT_TABLE, lootTableId));
+
+        if (lootTable != LootTable.EMPTY) {
+            LootContextParameterSet.Builder builder = (new LootContextParameterSet.Builder((ServerWorld) world)).add(LootContextParameters.ORIGIN, entity.getPos())
+                    .add(LootContextParameters.THIS_ENTITY, entity)
+                    .add(LootContextParameters.ATTACKING_ENTITY, playerEntity)
+                    .add(LootContextParameters.DAMAGE_SOURCE, world.getDamageSources().generic());
+
+            LootContextParameterSet lootContextParameterSet = builder.build(LootContextTypes.ENTITY);
+            lootTable.generateLoot(lootContextParameterSet, 0L, itemStack -> {
+                entity.dropStack(itemStack, height);
+            });
+        } else {
+            UsefulBrush.LOGGER.error("Could not find loot_table '%s'".formatted(lootTableId));
+        }
+
+        entity.getWorld()
+                .playSound(playerEntity, entity.getBlockPos(), SoundEvents.ITEM_BRUSH_BRUSHING_GENERIC, SoundCategory.BLOCKS);
     }
 }
