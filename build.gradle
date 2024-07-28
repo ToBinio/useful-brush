@@ -81,6 +81,7 @@ modrinth {
 * parrots now drop feathers
 * turtles now drop turtle scutes
 * brown mooshrooms drop brown mushrooms
+* increase tool damage
 """
     dependencies {
         required.project "fabric-api"

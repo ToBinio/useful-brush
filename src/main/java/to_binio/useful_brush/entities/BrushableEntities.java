@@ -44,10 +44,6 @@ public class BrushableEntities {
         }
 
         handleBrushEvent(world, stack, playerEntity, result);
-
-        if (result == ActionResult.PASS) {
-            world.playSound(playerEntity, entity.getBlockPos(), SoundEvents.ITEM_BRUSH_BRUSHING_GENERIC, SoundCategory.BLOCKS);
-        }
     }
 
     private static ActionResult brushBrushable(World world, PlayerEntity playerEntity, ItemStack stack, Entity entity,
@@ -70,6 +66,9 @@ public class BrushableEntities {
             world.addParticle(brushableEntityEntry.particleEffect(), brushLocation.x, brushLocation.y + height, brushLocation.z, world.getRandom()
                     .nextDouble() - 0.5, world.getRandom().nextDouble(), world.getRandom().nextDouble() - .5);
         }
+
+        entity.getWorld()
+                .playSound(playerEntity, entity.getBlockPos(), SoundEvents.ITEM_BRUSH_BRUSHING_GENERIC, SoundCategory.BLOCKS);
 
         if (world.isClient()) {
             return ActionResult.SUCCESS;
@@ -103,8 +102,5 @@ public class BrushableEntities {
         } else {
             UsefulBrush.LOGGER.error("Could not find loot_table '%s'".formatted(lootTableId));
         }
-
-        entity.getWorld()
-                .playSound(playerEntity, entity.getBlockPos(), SoundEvents.ITEM_BRUSH_BRUSHING_GENERIC, SoundCategory.BLOCKS);
     }
 }
