@@ -33,6 +33,9 @@ public class BrushableEntities {
         var brushableEntityEntry = UsefulBrush.BASIC_BRUSHABLE_ENTITIES.get(entity.getType());
         BrushCounter.brushEntity(entity.getId(), playerEntity.getId(), world);
 
+        entity.getWorld()
+                .playSound(playerEntity, entity.getBlockPos(), SoundEvents.ITEM_BRUSH_BRUSHING_GENERIC, SoundCategory.BLOCKS);
+
         ActionResult result;
 
         if (brushableEntityEntry != null) {
@@ -66,9 +69,6 @@ public class BrushableEntities {
             world.addParticle(brushableEntityEntry.particleEffect(), brushLocation.x, brushLocation.y + height, brushLocation.z, world.getRandom()
                     .nextDouble() - 0.5, world.getRandom().nextDouble(), world.getRandom().nextDouble() - .5);
         }
-
-        entity.getWorld()
-                .playSound(playerEntity, entity.getBlockPos(), SoundEvents.ITEM_BRUSH_BRUSHING_GENERIC, SoundCategory.BLOCKS);
 
         if (world.isClient()) {
             return ActionResult.SUCCESS;
