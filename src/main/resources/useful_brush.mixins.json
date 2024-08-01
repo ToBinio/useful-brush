@@ -2,20 +2,14 @@
   "required": true,
   "minVersion": "0.8",
   "package": "to_binio.useful_brush.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
   "mixins": [
     "BrushItemMixin",
     "ItemMixin",
     "blockEntity.CampfireBlockEntityAccessor",
     "entity.LivingEntityMixin",
-    "entity.chicken.ChickenBrushCountMixin",
-    "entity.chicken.ChickenMixin",
-    "entity.mooshroom.MooshroomAccessor",
-    "entity.mooshroom.MooshroomBrushCountMixin",
-    "entity.mooshroom.MooshroomMixin",
+    "entity.armadillo.ArmadilloMixin",
     "entity.sheep.SheepAccessor",
-    "entity.sheep.SheepBrushCountMixin",
-    "entity.sheep.SheepMixin",
     "entity.wolf.WolfMixin"
   ],
   "client": [

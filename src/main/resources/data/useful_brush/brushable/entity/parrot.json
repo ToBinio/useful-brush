@@ -1,0 +1,9 @@
+{
+  "id": "minecraft:parrot",
+  "particle_block": "minecraft:cobweb",
+  "min_particle_count": 1,
+  "max_particle_count": 3,
+  "height": 0.3,
+  "baby_height": 0.3,
+  "loot_table": "useful_brush:parrot"
+}

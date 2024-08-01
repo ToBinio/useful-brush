@@ -4,23 +4,23 @@ a fabric mod which adds more functionalities to the brush
 
 ## features
 
-* convert mossy blocks to their normal form (sometimes drop slime)
+* convert mossy blocks to their normal form (sometimes drop moss blocks)
 * convert infested blocks to their normal form
 * brush away sand, red-sand and gravel
 * brush snow to remove one layer
-* brush chickens to drop feathers
+* brush chickens or parrots to drop feathers
 * brush sheep to drop strings
 * brush mooshrooms to drop mushrooms
+* brush turtles to drop turtle scute
+* improve vanilla Armadillo brushing - don't just click it really brush the Armadillo
 * pat you dog
 * brush a campfire to make it burn better, thus let you cook food faster
 
 <hr>
 
-### add brushable blocks
+### add brushables
 
-you can add more simple brushable blocks by adding datapacks.
-In which you need to add a `brushables` folder.
-The path should look something like this: `datapacks/<datapack-name>/data/<namespace>/brushables/`.
-In this folder you can add new `.json` files the name of the file can be anything.
+you can add more simple brushable blocks & entities with datapacks.
+Simple add a `brushable/entity` or `brushable/block` folder and add new functionality.
 
-for examples of the syntax have a look [here](src/main/resources/data/useful_brush/brushables)
+for examples of the syntax have a look [here](src/main/resources/data/useful_brush/brushable)

@@ -3,6 +3,7 @@ package to_binio.useful_brush.blocks;
 import net.minecraft.block.*;
 import net.minecraft.util.ActionResult;
 import net.minecraft.world.World;
+import to_binio.useful_brush.BrushCounter;
 import to_binio.useful_brush.event.BrushBlockEvent;
 import to_binio.useful_brush.mixin.blockEntity.CampfireBlockEntityAccessor;
 

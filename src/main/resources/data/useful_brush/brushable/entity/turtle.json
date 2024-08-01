@@ -1,0 +1,9 @@
+{
+  "id": "minecraft:turtle",
+  "particle_block": "minecraft:moss_block",
+  "min_particle_count": 4,
+  "max_particle_count": 6,
+  "height": 0.3,
+  "baby_height": 0.1,
+  "loot_table": "useful_brush:turtle"
+}

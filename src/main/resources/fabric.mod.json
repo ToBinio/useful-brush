@@ -31,18 +31,5 @@
     "fabricloader": ">=${loader_version}",
     "fabric": "*",
     "minecraft": ">=1.20.1"
-  },
-  "custom": {
-    "loom:injected_interfaces": {
-      "net/minecraft/entity/passive/SheepEntity": [
-        "to_binio/useful_brush/BrushCount"
-      ],
-      "net/minecraft/entity/passive/ChickenEntity": [
-        "to_binio/useful_brush/BrushCount"
-      ],
-      "net/minecraft/entity/passive/MooshroomEntity": [
-        "to_binio/useful_brush/BrushCount"
-      ]
-    }
   }
 }
