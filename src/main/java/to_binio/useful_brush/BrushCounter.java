@@ -18,20 +18,16 @@ public class BrushCounter {
         Entry entry = times.getOrDefault(playerID, new BlockEntry(pos, 0));
         int count = entry.value() + 1;
 
-        switch (entry) {
-            case BlockEntry blockEntry: {
-                if (!blockEntry.pos.equals(pos)) {
-                    clear(playerID, world);
-                    count = 1;
-                }
-                break;
-            }
-            case EntityEntry ignored: {
+        if (entry instanceof BlockEntry blockEntry) {
+            if (!blockEntry.pos.equals(pos)) {
                 clear(playerID, world);
                 count = 1;
-                break;
             }
-            default:
+        }
+
+        if (entry instanceof EntityEntry) {
+            clear(playerID, world);
+            count = 1;
         }
 
         times.put(playerID, new BlockEntry(pos, count));
@@ -43,20 +39,16 @@ public class BrushCounter {
         Entry entry = times.getOrDefault(playerID, new EntityEntry(entityId, 0));
         int count = entry.value() + 1;
 
-        switch (entry) {
-            case BlockEntry ignore: {
+        if (entry instanceof BlockEntry) {
+            clear(playerID, world);
+            count = 1;
+        }
+
+        if (entry instanceof EntityEntry entityEntry) {
+            if (entityEntry.id != entityId) {
                 clear(playerID, world);
                 count = 1;
-                break;
             }
-            case EntityEntry entityEntry: {
-                if (entityEntry.id != entityId) {
-                    clear(playerID, world);
-                    count = 1;
-                }
-                break;
-            }
-            default:
         }
 
         times.put(playerID, new EntityEntry(entityId, count));

@@ -39,8 +39,6 @@ public class UsefulBrush implements ModInitializer {
                 .registerReloadListener(new BrushableEntitiesResourceLoader());
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new BrushableBlockResourceLoader());
 
-        BASIC_BRUSHABLE_ENTITIES.put(EntityType.ARMADILLO, new BrushableEntityEntry(new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.SAND.getDefaultState()), 4, 6, 0.4f, 0.2f, id("chicken")));
-
         BrushableEntityEvents.register();
         BrushableBlockEvents.register();
     }

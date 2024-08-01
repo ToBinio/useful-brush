@@ -44,17 +44,17 @@ public class BrushableEntitiesResourceLoader implements SimpleSynchronousResourc
                     String fileContent = new String(input.readAllBytes());
                     JsonObject data = JsonHelper.deserialize(fileContent);
 
-                    var entity = get(data, resource.getPackId(), "id", jsonElement -> stringToEntityType(jsonElement.getAsString()), jsonElement -> String.format("could not find entity '%s'", jsonElement.getAsString()));
+                    var entity = get(data, resource.getPack().getName(), "id", jsonElement -> stringToEntityType(jsonElement.getAsString()), jsonElement -> String.format("could not find entity '%s'", jsonElement.getAsString()));
 
-                    var particleBlock = get(data, resource.getPackId(), "particle_block", jsonElement -> stringToBlock(jsonElement.getAsString()), jsonElement -> String.format("could not find block '%s'", jsonElement.getAsString()));
+                    var particleBlock = get(data, resource.getPack().getName(), "particle_block", jsonElement -> stringToBlock(jsonElement.getAsString()), jsonElement -> String.format("could not find block '%s'", jsonElement.getAsString()));
 
-                    var minParticleCount = get(data, resource.getPackId(), "min_particle_count", JsonElement::getAsInt, jsonElement -> String.format("could not parse min_particle_count '%s'", jsonElement.getAsString()));
-                    var maxParticleCount = get(data, resource.getPackId(), "max_particle_count", JsonElement::getAsInt, jsonElement -> String.format("could not parse max_particle_count '%s'", jsonElement.getAsString()));
+                    var minParticleCount = get(data, resource.getPack().getName(), "min_particle_count", JsonElement::getAsInt, jsonElement -> String.format("could not parse min_particle_count '%s'", jsonElement.getAsString()));
+                    var maxParticleCount = get(data, resource.getPack().getName(), "max_particle_count", JsonElement::getAsInt, jsonElement -> String.format("could not parse max_particle_count '%s'", jsonElement.getAsString()));
 
-                    var height = get(data, resource.getPackId(), "height", JsonElement::getAsFloat, jsonElement -> String.format("could not parse height '%s'", jsonElement.getAsString()));
-                    var babyHeight = get(data, resource.getPackId(), "baby_height", JsonElement::getAsFloat, jsonElement -> String.format("could not parse baby_height '%s'", jsonElement.getAsString()));
+                    var height = get(data, resource.getPack().getName(), "height", JsonElement::getAsFloat, jsonElement -> String.format("could not parse height '%s'", jsonElement.getAsString()));
+                    var babyHeight = get(data, resource.getPack().getName(), "baby_height", JsonElement::getAsFloat, jsonElement -> String.format("could not parse baby_height '%s'", jsonElement.getAsString()));
 
-                    var lootTable = get(data, resource.getPackId(), "loot_table", jsonElement -> Identifier.tryParse(jsonElement.getAsString()), jsonElement -> String.format("could not parse loot_table '%s'", jsonElement.getAsString()));
+                    var lootTable = get(data, resource.getPack().getName(), "loot_table", jsonElement -> Identifier.tryParse(jsonElement.getAsString()), jsonElement -> String.format("could not parse loot_table '%s'", jsonElement.getAsString()));
 
                     var entry = new BrushableEntityEntry(new BlockStateParticleEffect(ParticleTypes.BLOCK, particleBlock.getDefaultState()), minParticleCount, maxParticleCount, height, babyHeight, lootTable);
 

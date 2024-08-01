@@ -8,6 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.BrushItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -58,7 +59,7 @@ public abstract class BrushItemMixin extends ItemMixin {
         if (hitResult instanceof EntityHitResult entityHitResult) {
             if (hitResult.getType() == HitResult.Type.ENTITY) {
 
-                int i = brushItem.getMaxUseTime(stack, playerEntity) - remainingUseTicks + 1;
+                int i = brushItem.getMaxUseTime(stack) - remainingUseTicks + 1;
                 boolean bl = i % 10 == 5;
                 if (bl) {
                     brush(world, stack, playerEntity, entityHitResult);

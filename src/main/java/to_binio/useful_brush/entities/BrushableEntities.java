@@ -52,7 +52,7 @@ public class BrushableEntities {
     private static ActionResult brushBrushable(World world, PlayerEntity playerEntity, ItemStack stack, Entity entity,
             BrushableEntityEntry brushableEntityEntry, Vec3d brushLocation) {
 
-        Random random = entity.getRandom();
+        Random random = entity.getWorld().random;
 
         var isBaby = false;
 
@@ -85,14 +85,12 @@ public class BrushableEntities {
             return;
         }
 
-        var lootTable = world.getServer()
-                .getReloadableRegistries()
-                .getLootTable(RegistryKey.of(RegistryKeys.LOOT_TABLE, lootTableId));
+        var lootTable = world.getServer().getLootManager().getLootTable(lootTableId);
 
         if (lootTable != LootTable.EMPTY) {
             LootContextParameterSet.Builder builder = (new LootContextParameterSet.Builder((ServerWorld) world)).add(LootContextParameters.ORIGIN, entity.getPos())
                     .add(LootContextParameters.THIS_ENTITY, entity)
-                    .add(LootContextParameters.ATTACKING_ENTITY, playerEntity)
+                    .add(LootContextParameters.LAST_DAMAGE_PLAYER, playerEntity)
                     .add(LootContextParameters.DAMAGE_SOURCE, world.getDamageSources().generic());
 
             LootContextParameterSet lootContextParameterSet = builder.build(LootContextTypes.ENTITY);

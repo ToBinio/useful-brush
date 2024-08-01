@@ -63,14 +63,14 @@ public class BrushableBlocks {
         }
 
         EquipmentSlot equipmentSlot = stack.equals(player.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
-        stack.damage(1, player, equipmentSlot);
+        stack.damage(1, player, (userx) -> {
+            userx.sendEquipmentBreakStatus(equipmentSlot);
+        });
 
         if (blockEntry.lootTable() == null || world.getServer() == null)
             return;
 
-        var lootTable = world.getServer()
-                .getReloadableRegistries()
-                .getLootTable(RegistryKey.of(RegistryKeys.LOOT_TABLE, blockEntry.lootTable()));
+        var lootTable = world.getServer().getLootManager().getLootTable(blockEntry.lootTable());
 
         if (lootTable != LootTable.EMPTY) {
             LootContextParameterSet.Builder builder = (new LootContextParameterSet.Builder((ServerWorld) world))

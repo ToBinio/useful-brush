@@ -16,7 +16,9 @@ public class BrushUtil {
             ActionResult brushResult) {
         if (brushResult == ActionResult.SUCCESS && !world.isClient()) {
             EquipmentSlot equipmentSlot = stack.equals(playerEntity.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
-            stack.damage(4, playerEntity, equipmentSlot);
+            stack.damage(4, playerEntity, (userx) -> {
+                userx.sendEquipmentBreakStatus(equipmentSlot);
+            });
         }
 
         if (brushResult == ActionResult.SUCCESS) {
