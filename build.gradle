@@ -72,16 +72,10 @@ modrinth {
     token = System.getenv("MODRINTH_TOKEN")
     projectId = "uY1F4Eo5"
     uploadFile = remapJar
-    gameVersions = ["1.21"]
+    gameVersions = ["1.21","1.21.1"]
     loaders = ["fabric"]
     changelog = """
-* ### Breaking - move `brushables` to `brushable/block` see (README)[https://github.com/ToBinio/useful-brush?tab=readme-ov-file#add-brushables] for more info
-* simply how brushing behavior of entities - drops are now simply handled via loottables
-* make mossy blocks drop mossblock instead of slime
-* parrots now drop feathers
-* turtles now drop turtle scutes
-* brown mooshrooms drop brown mushrooms
-* increase tool damage
+fix breaking progress not showing whena brush is in the inventory - [#13](https://github.com/ToBinio/useful-brush/issues/13)
 """
     dependencies {
         required.project "fabric-api"
