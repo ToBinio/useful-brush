@@ -74,10 +74,12 @@ public class BrushCounter {
     }
 
     public static void clear(int playerID, World world) {
-        BrushableBlocks.clear(playerID, world);
-
         var times = world.isClient() ? clientTimes : serverTimes;
-        times.remove(playerID);
+
+        if (times.containsKey(playerID)) {
+            BrushableBlocks.clear(playerID, world);
+            times.remove(playerID);
+        }
     }
 
     interface Entry {
