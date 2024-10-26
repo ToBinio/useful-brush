@@ -7,9 +7,9 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootTable;
-import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.loot.context.LootContextTypes;
+import net.minecraft.loot.context.LootWorldContext;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
@@ -46,7 +46,10 @@ public class BrushableBlocks {
     private static void brushBrushable(World world, ItemStack stack, PlayerEntity player,
             HitResult hitResult, BlockPos blockPos, BrushableBlockEntry blockEntry, BlockState blockState) {
 
-        world.setBlockBreakingInfo(player.getId(), blockPos, Math.round(((float) BrushCounter.get(player.getId(), world.isClient()) / blockEntry.brushCount()) * 10));
+        world.setBlockBreakingInfo(player.getId(),
+                blockPos,
+                Math.round(((float) BrushCounter.get(player.getId(),
+                        world.isClient()) / blockEntry.brushCount()) * 10));
 
         if (BrushCounter.get(player.getId(), world.isClient) < blockEntry.brushCount())
             return;
@@ -73,14 +76,14 @@ public class BrushableBlocks {
                 .getLootTable(RegistryKey.of(RegistryKeys.LOOT_TABLE, blockEntry.lootTable()));
 
         if (lootTable != LootTable.EMPTY) {
-            LootContextParameterSet.Builder builder = (new LootContextParameterSet.Builder((ServerWorld) world))
+            LootWorldContext.Builder builder = new LootWorldContext.Builder((ServerWorld) world)
                     .add(LootContextParameters.ORIGIN, blockPos.toCenterPos())
                     .add(LootContextParameters.TOOL, stack)
                     .add(LootContextParameters.BLOCK_STATE, blockState)
                     .add(LootContextParameters.THIS_ENTITY, player);
 
-            LootContextParameterSet lootContextParameterSet = builder.build(LootContextTypes.BLOCK);
-            lootTable.generateLoot(lootContextParameterSet, 0L, itemStack -> {
+            LootWorldContext lootWorldContext = builder.build(LootContextTypes.BLOCK);
+            lootTable.generateLoot(lootWorldContext, 0L, itemStack -> {
 
                 Vec3d pos = hitResult.getPos();
                 Vec3d center = blockPos.toCenterPos();
@@ -89,7 +92,11 @@ public class BrushableBlocks {
 
                 Vec3d spawnPos = pos.add(offset.normalize().multiply(0.2));
 
-                ItemEntity itemEntity = new ItemEntity(world, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), itemStack);
+                ItemEntity itemEntity = new ItemEntity(world,
+                        spawnPos.getX(),
+                        spawnPos.getY(),
+                        spawnPos.getZ(),
+                        itemStack);
                 itemEntity.setToDefaultPickupDelay();
                 world.spawnEntity(itemEntity);
             });

@@ -101,7 +101,7 @@ public class BrushableEntitiesResourceLoader implements SimpleSynchronousResourc
 
     @Nullable
     private Block stringToBlock(String string) {
-        var block = Registries.BLOCK.getOrEmpty(Identifier.tryParse(string));
+        var block = Registries.BLOCK.getOptionalValue(Identifier.tryParse(string));
 
         if (block.isEmpty()) {
             UsefulBrush.LOGGER.error("Unknown block '%s'".formatted(string));
@@ -113,7 +113,7 @@ public class BrushableEntitiesResourceLoader implements SimpleSynchronousResourc
 
     @Nullable
     private EntityType<?> stringToEntityType(String string) {
-        var type = Registries.ENTITY_TYPE.getOrEmpty(Identifier.tryParse(string));
+        var type = Registries.ENTITY_TYPE.getOptionalValue(Identifier.tryParse(string));
 
         if (type.isEmpty()) {
             UsefulBrush.LOGGER.error("Unknown Entity '%s'".formatted(string));

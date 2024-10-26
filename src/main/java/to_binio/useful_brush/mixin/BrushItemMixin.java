@@ -71,7 +71,7 @@ public abstract class BrushItemMixin extends ItemMixin {
 
     @Override
     protected void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks,
-            CallbackInfo ci) {
+            CallbackInfoReturnable<Boolean> ci) {
         BrushCounter.clear(user.getId(), world);
     }
 

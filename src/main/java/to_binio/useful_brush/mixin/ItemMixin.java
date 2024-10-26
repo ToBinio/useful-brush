@@ -27,7 +27,7 @@ public abstract class ItemMixin {
 
     @Inject (method = "onStoppedUsing", at = @At (value = "HEAD"))
     protected void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks,
-            CallbackInfo ci) {
+            CallbackInfoReturnable<Boolean> cir) {
     }
 
     @Inject (method = "inventoryTick", at = @At (value = "HEAD"))
