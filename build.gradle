@@ -74,7 +74,10 @@ modrinth {
     uploadFile = remapJar
     gameVersions = ["1.21.2","1.21.3"]
     loaders = ["fabric"]
-    changelog = ""
+    changelog = """
+* fix data packs not being overwritten
+* fix non-suspicious blocks insta breaking after brushing suspicious block - [#14](https://github.com/ToBinio/useful-brush/issues/14)
+"""
     dependencies {
         required.project "fabric-api"
     }
