@@ -28,10 +28,9 @@ public class BrushableBlocks {
 
     public static void brush(World world, ItemStack stack, PlayerEntity playerEntity,
             HitResult hitResult, BlockPos blockPos, BlockState blockState) {
-        var brushableBlock = UsefulBrush.BASIC_BRUSHABLE_BLOCKS.get(blockState.getBlock());
-
         BrushCounter.brushBlock(blockPos, playerEntity.getId(), world);
 
+        var brushableBlock = UsefulBrush.BASIC_BRUSHABLE_BLOCKS.get(blockState.getBlock());
         if (brushableBlock != null) {
             brushBrushable(world, stack, playerEntity, hitResult, blockPos, brushableBlock, blockState);
         } else {

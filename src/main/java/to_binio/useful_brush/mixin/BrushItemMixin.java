@@ -2,6 +2,7 @@ package to_binio.useful_brush.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BrushableBlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -43,8 +44,12 @@ public abstract class BrushItemMixin extends ItemMixin {
     private void usageTickBlock(World world, LivingEntity user, ItemStack stack, int remainingUseTicks, CallbackInfo ci,
             @Local PlayerEntity playerEntity, @Local HitResult hitResult, @Local BlockHitResult blockHitResult,
             @Local BlockPos blockPos) {
-        BlockState blockState = world.getBlockState(blockPos);
 
+        if (world.getBlockEntity(blockPos) instanceof BrushableBlockEntity) {
+            return;
+        }
+
+        BlockState blockState = world.getBlockState(blockPos);
         BrushableBlocks.brush(world, stack, playerEntity, hitResult, blockPos, blockState);
     }
 
@@ -125,12 +130,17 @@ public abstract class BrushItemMixin extends ItemMixin {
         Vec3d to = from.add(velocity);
 
         while (!from.isInRange(to, 1)) {
-            BlockHitResult hitResult = world.raycast(new RaycastContext(from, to, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, user));
+            BlockHitResult hitResult = world.raycast(new RaycastContext(from,
+                    to,
+                    RaycastContext.ShapeType.OUTLINE,
+                    RaycastContext.FluidHandling.NONE,
+                    user));
             if (hitResult.getType() == HitResult.Type.MISS) break;
 
             BlockState blockState = user.getWorld().getBlockState(hitResult.getBlockPos());
 
-            if (UsefulBrush.BASIC_BRUSHABLE_BLOCKS.containsKey(blockState.getBlock()) || BrushBlockEvent.hasListener(blockState.getBlock())) {
+            if (blockState.isFullCube(world, hitResult.getBlockPos()) || UsefulBrush.BASIC_BRUSHABLE_BLOCKS.containsKey(blockState.getBlock()) || BrushBlockEvent.hasListener(
+                    blockState.getBlock())) {
                 return hitResult;
             }
 
