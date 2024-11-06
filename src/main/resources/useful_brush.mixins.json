@@ -9,7 +9,7 @@
     "blockEntity.CampfireBlockEntityAccessor",
     "entity.LivingEntityMixin",
     "entity.armadillo.ArmadilloMixin",
-    "entity.sheep.LootTableDataAccessor",
+    "entity.sheep.SheepAccessor",
     "entity.wolf.WolfMixin"
   ],
   "client": [

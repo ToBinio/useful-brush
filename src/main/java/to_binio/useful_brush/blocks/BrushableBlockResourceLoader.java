@@ -122,7 +122,7 @@ public class BrushableBlockResourceLoader implements SimpleSynchronousResourceRe
 
     @Nullable
     private Block stringToBlock(String string) {
-        var block = Registries.BLOCK.getOptionalValue(Identifier.tryParse(string));
+        var block = Registries.BLOCK.getOrEmpty(Identifier.tryParse(string));
 
         if (block.isEmpty()) {
             UsefulBrush.LOGGER.error("Unknown block '%s'".formatted(string));

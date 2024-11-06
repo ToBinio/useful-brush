@@ -12,7 +12,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import to_binio.useful_brush.event.BrushEntityEvent;
-import to_binio.useful_brush.mixin.entity.sheep.LootTableDataAccessor;
+import to_binio.useful_brush.mixin.entity.sheep.SheepAccessor;
 
 import static to_binio.useful_brush.UsefulBrush.id;
 import static to_binio.useful_brush.entities.BrushableEntities.dropFromLootTable;
@@ -25,12 +25,12 @@ public class BrushableEntityEvents {
             Random random = sheep.getRandom();
             World world = sheep.getWorld();
 
-            var wool = (Block) LootTableDataAccessor.getWool().get(sheep.getColor());
+            var wool = (Block) SheepAccessor.getDrops().get(sheep.getColor());
 
             BlockStateParticleEffect blockStateParticleEffect = new BlockStateParticleEffect(ParticleTypes.BLOCK, wool.getDefaultState());
 
             var sheepHeight = sheep.isBaby() ? 0.3f : 0.8f;
-            summonFullSizeAnimalParticles(random, sheep.isBaby(), world, blockStateParticleEffect, brushLocation);
+            summonFullSizeAnimalParticles(random, sheep.isBaby(), world, blockStateParticleEffect, brushLocation, sheepHeight);
 
             if (world.isClient()) {
                 return ActionResult.SUCCESS;
@@ -51,7 +51,7 @@ public class BrushableEntityEvents {
             BlockStateParticleEffect blockStateParticleEffect = new BlockStateParticleEffect(ParticleTypes.BLOCK, particleBlock);
 
             var mooshroomHeight = mooshroom.isBaby() ? 0.3f : 0.8f;
-            summonFullSizeAnimalParticles(random, mooshroom.isBaby(), world, blockStateParticleEffect, brushLocation);
+            summonFullSizeAnimalParticles(random, mooshroom.isBaby(), world, blockStateParticleEffect, brushLocation, mooshroomHeight);
 
             if (world.isClient()) {
                 return ActionResult.SUCCESS;
@@ -98,11 +98,11 @@ public class BrushableEntityEvents {
     }
 
     private static void summonFullSizeAnimalParticles(Random random, boolean baby, World world,
-            BlockStateParticleEffect blockStateParticleEffect, Vec3d brushLocation) {
+            BlockStateParticleEffect blockStateParticleEffect, Vec3d brushLocation, float sheepHeight) {
         int particleCount = (int) (random.nextBetweenExclusive(7, 12) * (baby ? 0.3 : 1));
 
         for (int k = 0; k < particleCount; ++k) {
-            world.addParticle(blockStateParticleEffect, brushLocation.x, brushLocation.y, brushLocation.z, 3.0 * world.getRandom()
+            world.addParticle(blockStateParticleEffect, brushLocation.x, brushLocation.y + sheepHeight, brushLocation.z, 3.0 * world.getRandom()
                     .nextDouble() - 1.5, 2.0 * world.getRandom().nextDouble(), 3.0 * world.getRandom()
                     .nextDouble() - 1.5);
         }

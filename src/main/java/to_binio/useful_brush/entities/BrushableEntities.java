@@ -5,9 +5,9 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootTable;
+import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.loot.context.LootContextTypes;
-import net.minecraft.loot.context.LootWorldContext;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
@@ -19,6 +19,7 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import to_binio.useful_brush.BrushCounter;
 import to_binio.useful_brush.UsefulBrush;
 import to_binio.useful_brush.event.BrushEntityEvent;
@@ -33,10 +34,7 @@ public class BrushableEntities {
         BrushCounter.brushEntity(entity.getId(), playerEntity.getId(), world);
 
         entity.getWorld()
-                .playSound(playerEntity,
-                        entity.getBlockPos(),
-                        SoundEvents.ITEM_BRUSH_BRUSHING_GENERIC,
-                        SoundCategory.BLOCKS);
+                .playSound(playerEntity, entity.getBlockPos(), SoundEvents.ITEM_BRUSH_BRUSHING_GENERIC, SoundCategory.BLOCKS);
 
         ActionResult result;
 
@@ -65,18 +63,11 @@ public class BrushableEntities {
         }
 
         var height = isBaby ? brushableEntityEntry.babyHeight() : brushableEntityEntry.height();
-        int particleCount = (int) (random.nextBetweenExclusive(brushableEntityEntry.minParticleCount(),
-                brushableEntityEntry.maxParticleCount()) * (isBaby ? 0.5 : 1));
+        int particleCount = (int) (random.nextBetweenExclusive(brushableEntityEntry.minParticleCount(), brushableEntityEntry.maxParticleCount()) * (isBaby ? 0.5 : 1));
 
         for (int k = 0; k < particleCount; ++k) {
-            world.addParticle(brushableEntityEntry.particleEffect(),
-                    brushLocation.x,
-                    brushLocation.y,
-                    brushLocation.z,
-                    world.getRandom()
-                            .nextDouble() - 0.5,
-                    world.getRandom().nextDouble(),
-                    world.getRandom().nextDouble() - .5);
+            world.addParticle(brushableEntityEntry.particleEffect(), brushLocation.x, brushLocation.y + height, brushLocation.z, world.getRandom()
+                    .nextDouble() - 0.5, world.getRandom().nextDouble(), world.getRandom().nextDouble() - .5);
         }
 
         if (world.isClient()) {
@@ -99,16 +90,14 @@ public class BrushableEntities {
                 .getLootTable(RegistryKey.of(RegistryKeys.LOOT_TABLE, lootTableId));
 
         if (lootTable != LootTable.EMPTY) {
-            LootWorldContext.Builder builder = (new LootWorldContext.Builder((ServerWorld) world)).add(
-                            LootContextParameters.ORIGIN,
-                            entity.getPos())
+            LootContextParameterSet.Builder builder = (new LootContextParameterSet.Builder((ServerWorld) world)).add(LootContextParameters.ORIGIN, entity.getPos())
                     .add(LootContextParameters.THIS_ENTITY, entity)
                     .add(LootContextParameters.ATTACKING_ENTITY, playerEntity)
                     .add(LootContextParameters.DAMAGE_SOURCE, world.getDamageSources().generic());
 
-            LootWorldContext lootContextParameterSet = builder.build(LootContextTypes.ENTITY);
+            LootContextParameterSet lootContextParameterSet = builder.build(LootContextTypes.ENTITY);
             lootTable.generateLoot(lootContextParameterSet, 0L, itemStack -> {
-                entity.dropStack((ServerWorld) world, itemStack, height);
+                entity.dropStack(itemStack, height);
             });
         } else {
             UsefulBrush.LOGGER.error("Could not find loot_table '%s'".formatted(lootTableId));
