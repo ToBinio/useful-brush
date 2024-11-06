@@ -33,47 +33,46 @@ public class BrushableBlockResourceLoader implements SimpleSynchronousResourceRe
     public void reload(ResourceManager manager) {
         UsefulBrush.BASIC_BRUSHABLE_BLOCKS.clear();
 
-        var brushable = manager.findAllResources("brushable/block", identifier -> identifier.getPath()
+        var brushable = manager.findResources("brushable/block", identifier -> identifier.getPath()
                 .endsWith(".json"));
 
         var count = 0;
 
-        for (Map.Entry<Identifier, List<Resource>> resourceEntry : brushable.entrySet()) {
-            for (Resource resource : resourceEntry.getValue()) {
-                try (var input = resource.getInputStream()) {
-                    String fileContent = new String(input.readAllBytes());
-                    JsonObject data = JsonHelper.deserialize(fileContent);
+        for (Map.Entry<Identifier, Resource> resourceEntry : brushable.entrySet()) {
+            Resource resource = resourceEntry.getValue();
+            try (var input = resource.getInputStream()) {
+                String fileContent = new String(input.readAllBytes());
+                JsonObject data = JsonHelper.deserialize(fileContent);
 
-                    for (Map.Entry<String, JsonElement> entry : data.asMap().entrySet()) {
-                        Block from = stringToBlock(entry.getKey());
+                for (Map.Entry<String, JsonElement> entry : data.asMap().entrySet()) {
+                    Block from = stringToBlock(entry.getKey());
 
-                        if (from == null) {
-                            UsefulBrush.LOGGER.error("could not find block '{}'", entry.getKey());
-                            continue;
-                        }
-
-                        BrushableBlockEntry blockEntry = parseEntry(entry.getValue());
-
-                        if (blockEntry == null) {
-                            UsefulBrush.LOGGER.error("could parse data for '{}' - '{}'", entry.getKey(), entry.getValue());
-                            continue;
-                        }
-
-                        var previous = UsefulBrush.BASIC_BRUSHABLE_BLOCKS.put(from, blockEntry);
-
-                        if (previous != null) {
-                            UsefulBrush.LOGGER.warn("%s -> %s got overwritten with %s".formatted(from, previous.block()
-                                    .toString(), blockEntry.block().toString()));
-                        } else {
-                            count++;
-                        }
+                    if (from == null) {
+                        UsefulBrush.LOGGER.error("could not find block '{}'", entry.getKey());
+                        continue;
                     }
 
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    BrushableBlockEntry blockEntry = parseEntry(entry.getValue());
+
+                    if (blockEntry == null) {
+                        UsefulBrush.LOGGER.error("could parse data for '{}' - '{}'", entry.getKey(), entry.getValue());
+                        continue;
+                    }
+
+                    var previous = UsefulBrush.BASIC_BRUSHABLE_BLOCKS.put(from, blockEntry);
+
+                    if (previous != null) {
+                        UsefulBrush.LOGGER.warn("%s -> %s got overwritten with %s".formatted(from, previous.block()
+                                .toString(), blockEntry.block().toString()));
+                    } else {
+                        count++;
+                    }
                 }
-                UsefulBrush.LOGGER.info("Parsed brushable blocks in {}", resourceEntry.getKey());
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
+            UsefulBrush.LOGGER.info("Parsed brushable blocks in {}", resourceEntry.getKey());
         }
 
         UsefulBrush.LOGGER.info("Loaded {} brushable blocks", count);
