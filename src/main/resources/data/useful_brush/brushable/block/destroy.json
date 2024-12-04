@@ -1,14 +1,32 @@
 {
+  "dirt": {
+    "block": "air",
+    "brush_count": 3,
+    "loot_table": "useful_brush:block/dirt"
+  },
+  "grass_block": {
+    "block": "air",
+    "brush_count": 3,
+    "loot_table": "useful_brush:block/dirt"
+  },
+  "coarse_dirt": {
+    "block": "air",
+    "brush_count": 3,
+    "loot_table": "useful_brush:block/dirt"
+  },
   "sand": {
     "block": "air",
-    "brush_count": 3
+    "brush_count": 3,
+    "loot_table": "useful_brush:block/sand"
   },
   "gravel": {
     "block": "air",
-    "brush_count": 3
+    "brush_count": 3,
+    "loot_table": "useful_brush:block/sand"
   },
   "red_sand": {
     "block": "air",
-    "brush_count": 3
+    "brush_count": 3,
+    "loot_table": "useful_brush:block/sand"
   }
 }
