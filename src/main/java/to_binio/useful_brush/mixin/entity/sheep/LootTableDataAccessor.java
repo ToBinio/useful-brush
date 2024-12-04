@@ -1,6 +1,6 @@
 package to_binio.useful_brush.mixin.entity.sheep;
 
-import net.minecraft.data.server.loottable.LootTableData;
+import net.minecraft.data.loottable.LootTableData;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.util.DyeColor;
 import org.spongepowered.asm.mixin.Mixin;
