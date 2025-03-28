@@ -46,7 +46,7 @@ public class BrushableEntityEvents {
             Random random = mooshroom.getRandom();
             World world = mooshroom.getWorld();
 
-            var particleBlock = mooshroom.getVariant() == MooshroomEntity.Type.BROWN ? Blocks.BROWN_MUSHROOM_BLOCK.getDefaultState() : Blocks.RED_MUSHROOM_BLOCK.getDefaultState();
+            var particleBlock = mooshroom.getVariant() == MooshroomEntity.Variant.BROWN ? Blocks.BROWN_MUSHROOM_BLOCK.getDefaultState() : Blocks.RED_MUSHROOM_BLOCK.getDefaultState();
 
             BlockStateParticleEffect blockStateParticleEffect = new BlockStateParticleEffect(ParticleTypes.BLOCK, particleBlock);
 
@@ -91,7 +91,8 @@ public class BrushableEntityEvents {
             double xOffset = Math.cos(angle) * dogSize;
             double zOffset = Math.sin(angle) * dogSize;
 
-            world.addParticle(ParticleTypes.HEART, wolf.getX() + xOffset, wolf.getY() + dogHeight, wolf.getZ() + zOffset, 0, 4, 0);
+            assert world != null;
+            world.addParticleClient(ParticleTypes.HEART, wolf.getX() + xOffset, wolf.getY() + dogHeight, wolf.getZ() + zOffset, 0, 4, 0);
 
             return ActionResult.SUCCESS;
         });
@@ -102,7 +103,7 @@ public class BrushableEntityEvents {
         int particleCount = (int) (random.nextBetweenExclusive(7, 12) * (baby ? 0.3 : 1));
 
         for (int k = 0; k < particleCount; ++k) {
-            world.addParticle(blockStateParticleEffect, brushLocation.x, brushLocation.y, brushLocation.z, 3.0 * world.getRandom()
+            world.addParticleClient(blockStateParticleEffect, brushLocation.x, brushLocation.y, brushLocation.z, 3.0 * world.getRandom()
                     .nextDouble() - 1.5, 2.0 * world.getRandom().nextDouble(), 3.0 * world.getRandom()
                     .nextDouble() - 1.5);
         }

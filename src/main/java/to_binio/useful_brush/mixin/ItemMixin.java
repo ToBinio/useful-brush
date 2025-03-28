@@ -1,10 +1,12 @@
 package to_binio.useful_brush.mixin;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -31,7 +33,6 @@ public abstract class ItemMixin {
     }
 
     @Inject (method = "inventoryTick", at = @At (value = "HEAD"))
-    protected void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected,
-            CallbackInfo ci) {
+    protected void inventoryTick(ItemStack stack, ServerWorld world, Entity entity, EquipmentSlot slot, CallbackInfo ci) {
     }
 }

@@ -4,12 +4,14 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BrushableBlockEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.BrushItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -40,7 +42,7 @@ public abstract class BrushItemMixin extends ItemMixin {
     @Shadow
     protected abstract HitResult getHitResult(PlayerEntity user);
 
-    @Inject (at = @At (value = "INVOKE", target = "Lnet/minecraft/world/World;playSound(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;)V"), method = "usageTick")
+    @Inject (at = @At (value = "INVOKE", target = "Lnet/minecraft/world/World;playSound(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;)V"), method = "usageTick")
     private void usageTickBlock(World world, LivingEntity user, ItemStack stack, int remainingUseTicks, CallbackInfo ci,
             @Local PlayerEntity playerEntity, @Local HitResult hitResult, @Local BlockHitResult blockHitResult,
             @Local BlockPos blockPos) {
@@ -81,16 +83,14 @@ public abstract class BrushItemMixin extends ItemMixin {
     }
 
     @Override
-    protected void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected,
+    protected void inventoryTick(ItemStack stack, ServerWorld world, Entity entity, EquipmentSlot slot,
             CallbackInfo ci) {
-
         if (entity instanceof LivingEntity player) {
             if (!player.getStackInHand(player.getActiveHand()).isOf(Items.BRUSH)) {
                 BrushCounter.clear(player.getId(), world);
             }
         }
     }
-
 
     @Override
     protected void useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand,

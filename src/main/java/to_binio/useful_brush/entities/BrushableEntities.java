@@ -69,7 +69,7 @@ public class BrushableEntities {
                 brushableEntityEntry.maxParticleCount()) * (isBaby ? 0.5 : 1));
 
         for (int k = 0; k < particleCount; ++k) {
-            world.addParticle(brushableEntityEntry.particleEffect(),
+            world.addParticleClient(brushableEntityEntry.particleEffect(),
                     brushLocation.x,
                     brushLocation.y,
                     brushLocation.z,
