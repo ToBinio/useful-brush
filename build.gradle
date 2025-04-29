@@ -75,7 +75,7 @@ modrinth {
     gameVersions = ["1.21.5"]
     loaders = ["fabric"]
     changelog = """
-* support 1.21.5
+* fix crash when brushing dog and suspicious block - [#17](https://github.com/ToBinio/useful-brush/issues/17#top) 
 """
     dependencies {
         required.project "fabric-api"
