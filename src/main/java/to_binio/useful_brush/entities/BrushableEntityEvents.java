@@ -84,14 +84,13 @@ public class BrushableEntityEvents {
 
             wolf.heal(1);
 
-            ClientWorld world = MinecraftClient.getInstance().world;
+            World world = entity.getWorld();
 
             double angle = Math.toRadians(wolf.getBodyYaw() + 90);
 
             double xOffset = Math.cos(angle) * dogSize;
             double zOffset = Math.sin(angle) * dogSize;
 
-            assert world != null;
             world.addParticleClient(ParticleTypes.HEART, wolf.getX() + xOffset, wolf.getY() + dogHeight, wolf.getZ() + zOffset, 0, 4, 0);
 
             return ActionResult.SUCCESS;
