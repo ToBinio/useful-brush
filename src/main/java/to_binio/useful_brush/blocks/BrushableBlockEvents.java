@@ -16,7 +16,7 @@ public class BrushableBlockEvents {
             BlockState blockState = world.getBlockState(blockPos);
             CampfireBlockEntityAccessor campfireEntity = (CampfireBlockEntityAccessor) world.getBlockEntity(blockPos);
 
-            if (!blockState.get(CampfireBlock.LIT)) {
+            if (!blockState.get(CampfireBlock.LIT) || campfireEntity == null) {
                 return ActionResult.PASS;
             }
 
@@ -25,6 +25,12 @@ public class BrushableBlockEvents {
             for (int i = 0; i < cookingTimes.length; i++) {
                 cookingTimes[i] = (cookingTimes[i] + 10);
             }
+
+            return ActionResult.SUCCESS;
+        });
+
+        BrushBlockEvent.getVisualEvent(Blocks.CAMPFIRE).register((playerEntity, blockPos) -> {
+            World world = playerEntity.getWorld();
 
             for (int i = 0; i < 6; ++i) {
                 CampfireBlock.spawnSmokeParticle(world, blockPos, false, true);

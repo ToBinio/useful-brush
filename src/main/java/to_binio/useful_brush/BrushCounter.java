@@ -37,31 +37,6 @@ public class BrushCounter {
         times.put(playerID, new BlockEntry(pos, count));
     }
 
-    public static void brushEntity(int entityId, int playerID, World world) {
-        var times = world.isClient() ? clientTimes : serverTimes;
-
-        Entry entry = times.getOrDefault(playerID, new EntityEntry(entityId, 0));
-        int count = entry.value() + 1;
-
-        switch (entry) {
-            case BlockEntry ignore: {
-                clear(playerID, world);
-                count = 1;
-                break;
-            }
-            case EntityEntry entityEntry: {
-                if (entityEntry.id != entityId) {
-                    clear(playerID, world);
-                    count = 1;
-                }
-                break;
-            }
-            default:
-        }
-
-        times.put(playerID, new EntityEntry(entityId, count));
-    }
-
     public static int get(int playerID, boolean isClient) {
         var times = isClient ? clientTimes : serverTimes;
         var entry = times.get(playerID);

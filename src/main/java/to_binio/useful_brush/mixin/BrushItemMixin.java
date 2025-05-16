@@ -30,6 +30,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import to_binio.useful_brush.BrushCounter;
+import to_binio.useful_brush.BrushUtil;
 import to_binio.useful_brush.UsefulBrush;
 import to_binio.useful_brush.blocks.BrushableBlocks;
 import to_binio.useful_brush.event.BrushBlockEvent;
@@ -42,18 +43,39 @@ public abstract class BrushItemMixin extends ItemMixin {
     @Shadow
     protected abstract HitResult getHitResult(PlayerEntity user);
 
-    @Inject (at = @At (value = "INVOKE", target = "Lnet/minecraft/world/World;playSound(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;)V"), method = "usageTick")
-    private void usageTickBlock(World world, LivingEntity user, ItemStack stack, int remainingUseTicks, CallbackInfo ci,
-            @Local PlayerEntity playerEntity, @Local HitResult hitResult, @Local BlockHitResult blockHitResult,
-            @Local BlockPos blockPos) {
+    @Shadow
+    public abstract int getMaxUseTime(ItemStack stack, LivingEntity user);
 
-        if (world.getBlockEntity(blockPos) instanceof BrushableBlockEntity) {
-            return;
-        }
-
+    @Inject (at = @At (value = "INVOKE", target = "Lnet/minecraft/world/World;playSound(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;)V"), method = "usageTick", cancellable = true)
+    private void usageVisualTickBlock(World world, LivingEntity user, ItemStack stack, int remainingUseTicks, CallbackInfo ci, @Local BlockHitResult blockHitResult, @Local BlockPos blockPos) {
         BlockState blockState = world.getBlockState(blockPos);
-        BrushableBlocks.brush(world, stack, playerEntity, hitResult, blockPos, blockState);
+        BrushableBlocks.brush(world, stack, (PlayerEntity) user, blockHitResult, blockPos, blockState, true);
+
+        //cancel vanilla handling of brushableBlockEntity's since this is done in usageTickBlock()
+        ci.cancel();
     }
+
+    @Inject (method = "usageTick", at = @At (value = "INVOKE", target = "Lnet/minecraft/item/BrushItem;getMaxUseTime(Lnet/minecraft/item/ItemStack;Lnet/minecraft/entity/LivingEntity;)I"))
+    private void usageTickBlock(World world, LivingEntity user, ItemStack stack, int remainingUseTicks,
+            CallbackInfo ci, @Local BlockHitResult blockHitResult) {
+        int i = this.getMaxUseTime(stack, user) - remainingUseTicks + 1;
+
+        if (shouldTickBrush(user, i)) {
+            BlockPos blockPos = blockHitResult.getBlockPos();
+
+            if (world instanceof ServerWorld serverWorld && world.getBlockEntity(blockPos) instanceof BrushableBlockEntity brushableBlockEntity) {
+                boolean bl2 = brushableBlockEntity.brush(world.getTime(), serverWorld, user, blockHitResult.getSide(), stack);
+                if (bl2) {
+                    EquipmentSlot equipmentSlot = stack.equals(user.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
+                    stack.damage(1, user, equipmentSlot);
+                }
+            }else{
+                BlockState blockState = world.getBlockState(blockPos);
+                BrushableBlocks.brush(world, stack, (PlayerEntity) user, blockHitResult, blockPos, blockState, false);
+            }
+        }
+    }
+
 
     @Inject (at = @At (shift = At.Shift.AFTER, value = "INVOKE_ASSIGN", target = "Lnet/minecraft/item/BrushItem;getHitResult(Lnet/minecraft/entity/player/PlayerEntity;)Lnet/minecraft/util/hit/HitResult;"), method = "usageTick", cancellable = true)
     private void usageTickEntity(World world, LivingEntity user, ItemStack stack, int remainingUseTicks,
@@ -63,11 +85,14 @@ public abstract class BrushItemMixin extends ItemMixin {
 
         if (hitResult instanceof EntityHitResult entityHitResult) {
             if (hitResult.getType() == HitResult.Type.ENTITY) {
-
                 int i = brushItem.getMaxUseTime(stack, playerEntity) - remainingUseTicks + 1;
-                boolean bl = i % 10 == 5;
-                if (bl) {
-                    brush(world, stack, playerEntity, entityHitResult);
+
+                if (shouldTickBrush(playerEntity, i)) {
+                    brush(world, stack, playerEntity, entityHitResult, false);
+                }
+
+                if (i % 10 == 5) {
+                    brush(world, stack, playerEntity, entityHitResult, true);
                 }
 
                 ci.cancel();
@@ -112,9 +137,12 @@ public abstract class BrushItemMixin extends ItemMixin {
             Vec3d from = user.getEyePos();
             Vec3d to = hitResult.getPos();
 
-            HitResult enityHitResult = ProjectileUtil.getEntityCollision(world, user, from, to, user.getBoundingBox()
-                    .stretch(velocity)
-                    .expand(1.0), (entity) -> !entity.isSpectator() && entity.canHit());
+            HitResult enityHitResult = ProjectileUtil.getEntityCollision(world,
+                    user,
+                    from,
+                    to,
+                    user.getBoundingBox().stretch(velocity).expand(1.0),
+                    (entity) -> !entity.isSpectator() && entity.canHit());
 
             if (enityHitResult == null) {
                 cir.setReturnValue(hitResult);
@@ -139,8 +167,8 @@ public abstract class BrushItemMixin extends ItemMixin {
 
             BlockState blockState = user.getWorld().getBlockState(hitResult.getBlockPos());
 
-            if (blockState.isFullCube(world, hitResult.getBlockPos()) || UsefulBrush.BASIC_BRUSHABLE_BLOCKS.containsKey(blockState.getBlock()) || BrushBlockEvent.hasListener(
-                    blockState.getBlock())) {
+            if (blockState.isFullCube(world, hitResult.getBlockPos()) || UsefulBrush.BASIC_BRUSHABLE_BLOCKS.containsKey(
+                    blockState.getBlock()) || BrushBlockEvent.hasListener(blockState.getBlock())) {
                 return hitResult;
             }
 
@@ -148,5 +176,11 @@ public abstract class BrushItemMixin extends ItemMixin {
         }
 
         return BlockHitResult.createMissed(to, Direction.DOWN, new BlockPos(0, 0, 0));
+    }
+
+    @Unique
+    private boolean shouldTickBrush(LivingEntity user, int tick) {
+        double tickPerAction = Math.round(10 * BrushUtil.getBrushEfficiency(user));
+        return tick % tickPerAction == tickPerAction / 2;
     }
 }

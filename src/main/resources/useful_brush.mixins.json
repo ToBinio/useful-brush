@@ -6,6 +6,7 @@
   "mixins": [
     "BrushItemMixin",
     "ItemMixin",
+    "blockEntity.BrushableBlockEntityMixin",
     "blockEntity.CampfireBlockEntityAccessor",
     "entity.LivingEntityMixin",
     "entity.armadillo.ArmadilloMixin",

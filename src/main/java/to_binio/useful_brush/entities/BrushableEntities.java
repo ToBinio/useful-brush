@@ -19,42 +19,51 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
-import to_binio.useful_brush.BrushCounter;
 import to_binio.useful_brush.UsefulBrush;
 import to_binio.useful_brush.event.BrushEntityEvent;
 
 import static to_binio.useful_brush.BrushUtil.handleBrushEvent;
 
 public class BrushableEntities {
-    public static void brush(World world, ItemStack stack, PlayerEntity playerEntity, EntityHitResult hitResult) {
+    public static void brush(World world, ItemStack stack, PlayerEntity playerEntity, EntityHitResult hitResult,
+            boolean visualTick) {
         Entity entity = hitResult.getEntity();
 
         var brushableEntityEntry = UsefulBrush.BASIC_BRUSHABLE_ENTITIES.get(entity.getType());
-        BrushCounter.brushEntity(entity.getId(), playerEntity.getId(), world);
 
-        entity.getWorld()
-                .playSound(playerEntity,
-                        entity.getBlockPos(),
-                        SoundEvents.ITEM_BRUSH_BRUSHING_GENERIC,
-                        SoundCategory.BLOCKS);
+        if (visualTick) {
+            entity.getWorld()
+                    .playSound(playerEntity,
+                            entity.getBlockPos(),
+                            SoundEvents.ITEM_BRUSH_BRUSHING_GENERIC,
+                            SoundCategory.BLOCKS);
+        }
+
 
         ActionResult result;
 
         if (brushableEntityEntry != null) {
-            result = brushBrushable(world, playerEntity, stack, entity, brushableEntityEntry, hitResult.getPos());
+            result = brushBrushable(world, playerEntity, entity, brushableEntityEntry, hitResult.getPos(), visualTick);
         } else {
-            result = BrushEntityEvent.getEvent(entity.getClass())
-                    .invoker()
-                    .brush(entity, playerEntity, hitResult.getPos());
+
+            if (visualTick) {
+                result = BrushEntityEvent.getVisualEvent(entity.getClass())
+                        .invoker()
+                        .brush(entity, playerEntity, hitResult.getPos());
+            } else {
+                result = BrushEntityEvent.getEvent(entity.getClass())
+                        .invoker()
+                        .brush(entity, playerEntity, hitResult.getPos());
+            }
         }
 
-        handleBrushEvent(world, stack, playerEntity, result);
+        if (!visualTick) {
+            handleBrushEvent(world, stack, playerEntity, result);
+        }
     }
 
-    private static ActionResult brushBrushable(World world, PlayerEntity playerEntity, ItemStack stack, Entity entity,
-            BrushableEntityEntry brushableEntityEntry, Vec3d brushLocation) {
-
-        Random random = entity.getRandom();
+    private static ActionResult brushBrushable(World world, PlayerEntity playerEntity, Entity entity,
+            BrushableEntityEntry brushableEntityEntry, Vec3d brushLocation, boolean visualTick) {
 
         var isBaby = false;
 
@@ -64,25 +73,28 @@ public class BrushableEntities {
             }
         }
 
-        var height = isBaby ? brushableEntityEntry.babyHeight() : brushableEntityEntry.height();
-        int particleCount = (int) (random.nextBetweenExclusive(brushableEntityEntry.minParticleCount(),
-                brushableEntityEntry.maxParticleCount()) * (isBaby ? 0.5 : 1));
+        if (visualTick) {
+            Random random = entity.getRandom();
 
-        for (int k = 0; k < particleCount; ++k) {
-            world.addParticleClient(brushableEntityEntry.particleEffect(),
-                    brushLocation.x,
-                    brushLocation.y,
-                    brushLocation.z,
-                    world.getRandom()
-                            .nextDouble() - 0.5,
-                    world.getRandom().nextDouble(),
-                    world.getRandom().nextDouble() - .5);
+            int particleCount = (int) (random.nextBetweenExclusive(brushableEntityEntry.minParticleCount(),
+                    brushableEntityEntry.maxParticleCount()) * (isBaby ? 0.5 : 1));
+
+            for (int k = 0; k < particleCount; ++k) {
+                world.addParticleClient(brushableEntityEntry.particleEffect(),
+                        brushLocation.x,
+                        brushLocation.y,
+                        brushLocation.z,
+                        world.getRandom().nextDouble() - 0.5,
+                        world.getRandom().nextDouble(),
+                        world.getRandom().nextDouble() - .5);
+            }
         }
 
-        if (world.isClient()) {
+        if (world.isClient() || visualTick) {
             return ActionResult.SUCCESS;
         }
 
+        var height = isBaby ? brushableEntityEntry.babyHeight() : brushableEntityEntry.height();
         dropFromLootTable(world, playerEntity, entity, height, brushableEntityEntry.lootTable());
 
         return ActionResult.SUCCESS;

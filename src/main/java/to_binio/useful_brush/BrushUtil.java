@@ -1,6 +1,8 @@
 package to_binio.useful_brush;
 
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
@@ -22,5 +24,9 @@ public class BrushUtil {
         if (brushResult == ActionResult.SUCCESS) {
             BrushCounter.clear(playerEntity.getId(), world);
         }
+    }
+
+    public static double getBrushEfficiency(LivingEntity user) {
+        return 1 / (1 + (user.getAttributeValue(EntityAttributes.MINING_EFFICIENCY) * 0.15));
     }
 }

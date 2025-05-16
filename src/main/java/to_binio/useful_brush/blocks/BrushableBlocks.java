@@ -26,37 +26,43 @@ import static to_binio.useful_brush.BrushUtil.handleBrushEvent;
 
 public class BrushableBlocks {
 
-    public static void brush(World world, ItemStack stack, PlayerEntity playerEntity,
-            HitResult hitResult, BlockPos blockPos, BlockState blockState) {
-        BrushCounter.brushBlock(blockPos, playerEntity.getId(), world);
+    public static void brush(World world, ItemStack stack, PlayerEntity playerEntity, HitResult hitResult,
+            BlockPos blockPos, BlockState blockState, boolean isVisualTick) {
 
         var brushableBlock = UsefulBrush.BASIC_BRUSHABLE_BLOCKS.get(blockState.getBlock());
-        if (brushableBlock != null) {
-            brushBrushable(world, stack, playerEntity, hitResult, blockPos, brushableBlock, blockState);
-        } else {
-            ActionResult brushResult = BrushBlockEvent.getEvent(blockState.getBlock())
-                    .invoker()
-                    .brush(playerEntity, blockPos);
 
-            handleBrushEvent(world, stack, playerEntity, brushResult);
+        if (isVisualTick) {
+            if (brushableBlock == null)
+                BrushBlockEvent.getVisualEvent(blockState.getBlock()).invoker().brush(playerEntity, blockPos);
+
+        } else {
+            BrushCounter.brushBlock(blockPos, playerEntity.getId(), world);
+
+            if (brushableBlock == null) {
+                ActionResult brushResult = BrushBlockEvent.getEvent(blockState.getBlock())
+                        .invoker()
+                        .brush(playerEntity, blockPos);
+
+                handleBrushEvent(world, stack, playerEntity, brushResult);
+            } else {
+                brushBrushable(world, stack, playerEntity, hitResult, blockPos, brushableBlock, blockState);
+            }
         }
     }
 
-    private static void brushBrushable(World world, ItemStack stack, PlayerEntity player,
-            HitResult hitResult, BlockPos blockPos, BrushableBlockEntry blockEntry, BlockState blockState) {
+    private static void brushBrushable(World world, ItemStack stack, PlayerEntity player, HitResult hitResult,
+            BlockPos blockPos, BrushableBlockEntry blockEntry, BlockState blockState) {
 
         world.setBlockBreakingInfo(player.getId(),
                 blockPos,
                 Math.round(((float) BrushCounter.get(player.getId(),
                         world.isClient()) / blockEntry.brushCount()) * 10));
 
-        if (BrushCounter.get(player.getId(), world.isClient) < blockEntry.brushCount())
-            return;
+        if (BrushCounter.get(player.getId(), world.isClient) < blockEntry.brushCount()) return;
 
         BrushCounter.clear(player.getId(), world);
 
-        if (world.isClient())
-            return;
+        if (world.isClient()) return;
 
         if (blockEntry.block() == Blocks.AIR) {
             world.breakBlock(blockPos, false);
@@ -67,16 +73,16 @@ public class BrushableBlocks {
         EquipmentSlot equipmentSlot = stack.equals(player.getEquippedStack(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
         stack.damage(1, player, equipmentSlot);
 
-        if (blockEntry.lootTable() == null || world.getServer() == null)
-            return;
+        if (blockEntry.lootTable() == null || world.getServer() == null) return;
 
         var lootTable = world.getServer()
                 .getReloadableRegistries()
                 .getLootTable(RegistryKey.of(RegistryKeys.LOOT_TABLE, blockEntry.lootTable()));
 
         if (lootTable != LootTable.EMPTY) {
-            LootWorldContext.Builder builder = new LootWorldContext.Builder((ServerWorld) world)
-                    .add(LootContextParameters.ORIGIN, blockPos.toCenterPos())
+            LootWorldContext.Builder builder = new LootWorldContext.Builder((ServerWorld) world).add(
+                            LootContextParameters.ORIGIN,
+                            blockPos.toCenterPos())
                     .add(LootContextParameters.TOOL, stack)
                     .add(LootContextParameters.BLOCK_STATE, blockState)
                     .add(LootContextParameters.THIS_ENTITY, player);
