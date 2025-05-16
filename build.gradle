@@ -75,7 +75,7 @@ modrinth {
     gameVersions = ["1.21.5"]
     loaders = ["fabric"]
     changelog = """
-* fix crash when brushing dog and suspicious block - [#17](https://github.com/ToBinio/useful-brush/issues/17#top) 
+* the efficiency enchantment now has an effect on the brush - [#18](https://github.com/ToBinio/useful-brush/issues/18#top) 
 """
     dependencies {
         required.project "fabric-api"

@@ -4,6 +4,7 @@ a fabric mod which adds more functionalities to the brush
 
 ## features
 
+* the efficiency enchantment now has an effect on the brush
 * convert mossy blocks to their normal form (sometimes drop moss blocks)
 * convert infested blocks to their normal form
 * brush away dirt, sand, red-sand and gravel (drops some small things)
