@@ -76,6 +76,7 @@ modrinth {
     loaders = ["fabric"]
     changelog = """
 * fix brush sound not playing when brushing blocks - [#19](https://github.com/ToBinio/useful-brush/issues/19#top) 
+* fix enchantment not being able to be applied
 """
     dependencies {
         required.project "fabric-api"
