@@ -46,7 +46,7 @@ public abstract class BrushItemMixin extends ItemMixin {
     @Shadow
     public abstract int getMaxUseTime(ItemStack stack, LivingEntity user);
 
-    @Inject (at = @At (value = "INVOKE", target = "Lnet/minecraft/world/World;playSound(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;)V"), method = "usageTick", cancellable = true)
+    @Inject (at = @At (value = "INVOKE", shift = At.Shift.AFTER, target = "Lnet/minecraft/world/World;playSound(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;)V"), method = "usageTick", cancellable = true)
     private void usageVisualTickBlock(World world, LivingEntity user, ItemStack stack, int remainingUseTicks, CallbackInfo ci, @Local BlockHitResult blockHitResult, @Local BlockPos blockPos) {
         BlockState blockState = world.getBlockState(blockPos);
         BrushableBlocks.brush(world, stack, (PlayerEntity) user, blockHitResult, blockPos, blockState, true);
