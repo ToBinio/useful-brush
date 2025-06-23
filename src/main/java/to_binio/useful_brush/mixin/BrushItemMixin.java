@@ -142,7 +142,8 @@ public abstract class BrushItemMixin extends ItemMixin {
                     from,
                     to,
                     user.getBoundingBox().stretch(velocity).expand(1.0),
-                    (entity) -> !entity.isSpectator() && entity.canHit());
+                    (entity) -> !entity.isSpectator() && entity.canHit(),
+                    0.0F);
 
             if (enityHitResult == null) {
                 cir.setReturnValue(hitResult);
