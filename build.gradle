@@ -72,11 +72,10 @@ modrinth {
     token = System.getenv("MODRINTH_TOKEN")
     projectId = "uY1F4Eo5"
     uploadFile = remapJar
-    gameVersions = ["1.21.5"]
+    gameVersions = ["1.21.6"]
     loaders = ["fabric"]
     changelog = """
-* fix brush sound not playing when brushing blocks - [#19](https://github.com/ToBinio/useful-brush/issues/19#top) 
-* fix enchantment not being able to be applied
+* support 1.21.6
 """
     dependencies {
         required.project "fabric-api"
