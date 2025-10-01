@@ -13,6 +13,7 @@ a fabric mod which adds more functionalities to the brush
 * brush sheep to drop strings
 * brush mooshrooms to drop mushrooms
 * brush turtles to drop turtle scute
+* brush frogs to drop slime balls
 * improve vanilla Armadillo brushing - don't just click it really brush the Armadillo
 * pat you dog
 * brush a campfire to make it burn better, thus let you cook food faster

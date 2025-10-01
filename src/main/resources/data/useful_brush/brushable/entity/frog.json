@@ -1,0 +1,9 @@
+{
+  "id": "minecraft:frog",
+  "particle_block": "minecraft:slime_block",
+  "min_particle_count": 4,
+  "max_particle_count": 6,
+  "height": 0.2,
+  "baby_height": 0.2,
+  "loot_table": "useful_brush:frog"
+}

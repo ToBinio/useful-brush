@@ -76,6 +76,7 @@ modrinth {
     loaders = ["fabric"]
     changelog = """
 * support 1.21.9
+* brush frogs - [#22](https://github.com/ToBinio/useful-brush/issues/22)
 """
     dependencies {
         required.project "fabric-api"
