@@ -32,7 +32,7 @@ public class BrushableEntities {
         var brushableEntityEntry = UsefulBrush.BASIC_BRUSHABLE_ENTITIES.get(entity.getType());
 
         if (visualTick) {
-            entity.getWorld()
+            entity.getEntityWorld()
                     .playSound(playerEntity,
                             entity.getBlockPos(),
                             SoundEvents.ITEM_BRUSH_BRUSHING_GENERIC,
@@ -113,7 +113,7 @@ public class BrushableEntities {
         if (lootTable != LootTable.EMPTY) {
             LootWorldContext.Builder builder = (new LootWorldContext.Builder((ServerWorld) world)).add(
                             LootContextParameters.ORIGIN,
-                            entity.getPos())
+                            entity.getEntityPos())
                     .add(LootContextParameters.THIS_ENTITY, entity)
                     .add(LootContextParameters.ATTACKING_ENTITY, playerEntity)
                     .add(LootContextParameters.DAMAGE_SOURCE, world.getDamageSources().generic());

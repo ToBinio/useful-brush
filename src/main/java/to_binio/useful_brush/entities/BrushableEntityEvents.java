@@ -20,7 +20,7 @@ public class BrushableEntityEvents {
     public static void register() {
         BrushEntityEvent.getEvent(SheepEntity.class).register((entity, playerEntity, brushLocation) -> {
             SheepEntity sheep = (SheepEntity) entity;
-            World world = sheep.getWorld();
+            World world = sheep.getEntityWorld();
 
             if (!world.isClient()) {
                 var sheepHeight = sheep.isBaby() ? 0.3f : 0.8f;
@@ -33,7 +33,7 @@ public class BrushableEntityEvents {
         BrushEntityEvent.getVisualEvent(SheepEntity.class).register((entity, playerEntity, brushLocation) -> {
             SheepEntity sheep = (SheepEntity) entity;
             Random random = sheep.getRandom();
-            World world = sheep.getWorld();
+            World world = sheep.getEntityWorld();
 
             var wool = (Block) LootTableDataAccessor.getWool().get(sheep.getColor());
 
@@ -47,7 +47,7 @@ public class BrushableEntityEvents {
 
         BrushEntityEvent.getEvent(MooshroomEntity.class).register((entity, playerEntity, brushLocation) -> {
             MooshroomEntity mooshroom = (MooshroomEntity) entity;
-            World world = mooshroom.getWorld();
+            World world = mooshroom.getEntityWorld();
 
             if (!world.isClient()) {
                 var mooshroomHeight = mooshroom.isBaby() ? 0.3f : 0.8f;
@@ -60,7 +60,7 @@ public class BrushableEntityEvents {
         BrushEntityEvent.getVisualEvent(MooshroomEntity.class).register((entity, playerEntity, brushLocation) -> {
             MooshroomEntity mooshroom = (MooshroomEntity) entity;
             Random random = mooshroom.getRandom();
-            World world = mooshroom.getWorld();
+            World world = mooshroom.getEntityWorld();
 
             var particleBlock = mooshroom.getVariant() == MooshroomEntity.Variant.BROWN ? Blocks.BROWN_MUSHROOM_BLOCK.getDefaultState() : Blocks.RED_MUSHROOM_BLOCK.getDefaultState();
 
@@ -102,7 +102,7 @@ public class BrushableEntityEvents {
                 dogHeight = 1.2;
             }
 
-            World world = entity.getWorld();
+            World world = entity.getEntityWorld();
 
             double angle = Math.toRadians(wolf.getBodyYaw() + 90);
 

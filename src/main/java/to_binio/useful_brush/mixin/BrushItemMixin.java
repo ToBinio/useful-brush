@@ -133,7 +133,7 @@ public abstract class BrushItemMixin extends ItemMixin {
         HitResult hitResult = getSpecialBlockHitResult(user);
         if (hitResult.getType() != HitResult.Type.MISS) {
             Vec3d velocity = user.getRotationVec(0.0F).multiply(user.getBlockInteractionRange());
-            World world = user.getWorld();
+            World world = user.getEntityWorld();
             Vec3d from = user.getEyePos();
             Vec3d to = hitResult.getPos();
 
@@ -154,7 +154,7 @@ public abstract class BrushItemMixin extends ItemMixin {
     @Unique
     private static BlockHitResult getSpecialBlockHitResult(PlayerEntity user) {
         Vec3d velocity = user.getRotationVec(0.0F).multiply(user.getBlockInteractionRange());
-        World world = user.getWorld();
+        World world = user.getEntityWorld();
         Vec3d from = user.getEyePos();
         Vec3d to = from.add(velocity);
 
@@ -166,7 +166,7 @@ public abstract class BrushItemMixin extends ItemMixin {
                     user));
             if (hitResult.getType() == HitResult.Type.MISS) break;
 
-            BlockState blockState = user.getWorld().getBlockState(hitResult.getBlockPos());
+            BlockState blockState = user.getEntityWorld().getBlockState(hitResult.getBlockPos());
 
             if (blockState.isFullCube(world, hitResult.getBlockPos()) || UsefulBrush.BASIC_BRUSHABLE_BLOCKS.containsKey(
                     blockState.getBlock()) || BrushBlockEvent.hasListener(blockState.getBlock())) {

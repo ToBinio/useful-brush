@@ -12,7 +12,7 @@ public class BrushableBlockEvents {
     public static void register() {
 
         BrushBlockEvent.getEvent(Blocks.CAMPFIRE).register((playerEntity, blockPos) -> {
-            World world = playerEntity.getWorld();
+            World world = playerEntity.getEntityWorld();
             BlockState blockState = world.getBlockState(blockPos);
             CampfireBlockEntityAccessor campfireEntity = (CampfireBlockEntityAccessor) world.getBlockEntity(blockPos);
 
@@ -30,7 +30,7 @@ public class BrushableBlockEvents {
         });
 
         BrushBlockEvent.getVisualEvent(Blocks.CAMPFIRE).register((playerEntity, blockPos) -> {
-            World world = playerEntity.getWorld();
+            World world = playerEntity.getEntityWorld();
 
             for (int i = 0; i < 6; ++i) {
                 CampfireBlock.spawnSmokeParticle(world, blockPos, false, true);
@@ -40,7 +40,7 @@ public class BrushableBlockEvents {
         });
 
         BrushBlockEvent.getEvent(Blocks.SNOW).register((playerEntity, blockPos) -> {
-            World world = playerEntity.getWorld();
+            World world = playerEntity.getEntityWorld();
 
             if (world.isClient()) {
                 return ActionResult.SUCCESS;
@@ -61,7 +61,7 @@ public class BrushableBlockEvents {
         });
 
         BrushBlockEvent.getEvent(Blocks.SNOW_BLOCK).register((playerEntity, blockPos) -> {
-            World world = playerEntity.getWorld();
+            World world = playerEntity.getEntityWorld();
 
             if (world.isClient()) {
                 return ActionResult.SUCCESS;

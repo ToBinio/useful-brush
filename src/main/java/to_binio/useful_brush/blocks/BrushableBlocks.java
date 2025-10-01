@@ -58,7 +58,7 @@ public class BrushableBlocks {
                 Math.round(((float) BrushCounter.get(player.getId(),
                         world.isClient()) / blockEntry.brushCount()) * 10));
 
-        if (BrushCounter.get(player.getId(), world.isClient) < blockEntry.brushCount()) return;
+        if (BrushCounter.get(player.getId(), world.isClient()) < blockEntry.brushCount()) return;
 
         BrushCounter.clear(player.getId(), world);
 
