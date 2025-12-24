@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.11-SNAPSHOT'
+    id 'fabric-loom' version '1.14-SNAPSHOT'
     id 'maven-publish'
     id "com.modrinth.minotaur" version "2.+"
 }
@@ -55,7 +55,6 @@ java {
     if (JavaVersion.current() < javaVersion) {
         toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }
-    archivesBaseName = project.archives_base_name
     // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
     // if it is present.
     // If you remove this line, sources will not be generated.
@@ -63,8 +62,10 @@ java {
 }
 
 jar {
+    inputs.property "archivesName", project.base.archivesName
+
     from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}" }
+        rename { "${it}_${inputs.properties.archivesName}"}
     }
 }
 
@@ -72,11 +73,10 @@ modrinth {
     token = System.getenv("MODRINTH_TOKEN")
     projectId = "uY1F4Eo5"
     uploadFile = remapJar
-    gameVersions = ["1.21.9"]
+    gameVersions = ["1.21.11"]
     loaders = ["fabric"]
     changelog = """
-* support 1.21.9
-* brush frogs - [#22](https://github.com/ToBinio/useful-brush/issues/22)
+* support 1.21.11
 """
     dependencies {
         required.project "fabric-api"
