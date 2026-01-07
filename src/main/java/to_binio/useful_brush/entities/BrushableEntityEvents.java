@@ -2,8 +2,6 @@ package to_binio.useful_brush.entities;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.passive.*;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
@@ -84,7 +82,7 @@ public class BrushableEntityEvents {
 
             wolf.heal(1);
 
-            ClientWorld world = MinecraftClient.getInstance().world;
+            World world = entity.getWorld();
 
             double angle = Math.toRadians(wolf.getBodyYaw() + 90);
 
